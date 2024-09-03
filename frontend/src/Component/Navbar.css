@@ -1,0 +1,97 @@
+:root {
+    --primary-text-color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 20px;
+}
+
+.logo {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    transition: opacity 1s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+    color: #f4f4f4;
+}
+
+.mobile-menu-icon {
+    display: none;
+    font-size: 1.8rem;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Responsive CSS */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .mobile-menu-icon {
+        display: block;
+    }
+
+    .nav-links-mobile {
+        display: block;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: #333;
+        text-align: center;
+        transform: translateY(-20px);
+        pointer-events: none;
+        opacity: 1;
+        color:red;
+        transform: translateY(0);   
+        pointer-events: auto;   
+    }
+
+    .nav-links-mobile li {
+        margin: 20px 0;
+        list-style-type: none;
+    }
+
+    .nav-links-mobile a {
+        text-decoration: none;
+        color: var(--primary-text-color);
+    }
+
+    /* Base styles for the icon */
+    .bx-menu {
+        transition: transform 0.5s ease-in-out;
+        /* Controls the duration and easing of the rotation */
+    }
+
+    /* Rotate the icon when the rotate class is applied */
+    .rotate {
+        transform: rotate(90deg);
+    }
+
+}
