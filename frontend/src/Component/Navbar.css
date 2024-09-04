@@ -45,9 +45,9 @@
     background: none;
     border: none;
     cursor: pointer;
+
 }
 
-/* Responsive CSS */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -55,22 +55,34 @@
 
     .mobile-menu-icon {
         display: block;
+        transition: rotate0 0.5s ease-in-out;
+    }
+
+    .rotate0 {
+        transform: rotate(0deg);
+        transition: transform 0.5s ease-in-out;
     }
 
     .nav-links-mobile {
         display: block;
         position: absolute;
-        top: 70px;
+        top: 90px;
         left: 0;
         width: 100%;
         background-color: #333;
         text-align: center;
         transform: translateY(-20px);
+        opacity: 0;
+        transition: transform 1s ease-in-out, opacity 1s ease-in-out;
         pointer-events: none;
+    }
+
+
+    .nav-links-mobile.active {
+        transform: translateY(0);
         opacity: 1;
-        color:red;
-        transform: translateY(0);   
-        pointer-events: auto;   
+        transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+        pointer-events: auto;
     }
 
     .nav-links-mobile li {
@@ -83,15 +95,13 @@
         color: var(--primary-text-color);
     }
 
-    /* Base styles for the icon */
     .bx-menu {
         transition: transform 0.5s ease-in-out;
-        /* Controls the duration and easing of the rotation */
     }
 
-    /* Rotate the icon when the rotate class is applied */
-    .rotate {
+    .rotate90 {
         transform: rotate(90deg);
+        transition: transform 0.5s ease-in-out;
     }
 
 }
