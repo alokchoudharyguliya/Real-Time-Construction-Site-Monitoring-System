@@ -5,3 +5,5 @@ Problem Statement.docx
 helm.v3i.coco.zip
 Store/*
 Dataset/*
+*.venv/*
+*.h5

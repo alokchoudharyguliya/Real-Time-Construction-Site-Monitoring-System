@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Project</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <!-- Your navigation header code here -->
+    </header>
+
+    <div class="user-input">
+        <h1>Your Project</h1>
+        <form action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+            <br>
+            <label for="upload-image">Image :</label>
+            <input type="file" name="file" id="upload-image" accept="image/*" required>
+            <br><br>
+
+            <label for="comment">Additional Comments:</label>
+            <br>
+            <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+            <br>
+
+            <input type="submit" value="Submit Application">
+        </form>
+    </div>
+</body>
+</html>
