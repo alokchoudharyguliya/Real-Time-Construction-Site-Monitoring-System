@@ -1,0 +1,27 @@
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { AppProviders } from '@/components/providers/app-providers';
+
+const inter = Inter({ subsets: ['latin'] });
+
+export const metadata: Metadata = {
+  title: 'ConstructSight - Construction Site Monitoring System',
+  description: 'Advanced construction site monitoring with AI-powered progress tracking, 3D visualization, and real-time reporting.',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <AppProviders>
+          {children}
+        </AppProviders>
+      </body>
+    </html>
+  );
+}
