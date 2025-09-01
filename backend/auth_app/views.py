@@ -1,8 +1,10 @@
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 import json
+from django.conf import settings
+from django.core.files.storage import default_storage
+import requests
 from bson import ObjectId
 
 from .utils import (
@@ -38,9 +40,9 @@ def signup(request):
             'name': data['name'],
             'email': data['email'],
             'password': hashed_password,
-            'age': data.get('age'),
+            # 'age': data.get('age'),
             'created_at': ObjectId().generation_time,
-            'account_type':data['account_type']
+            'account_type':data['account_type'],
         }
         
         # Insert user
@@ -98,9 +100,11 @@ def login(request):
             'email': user['email'],
             'age': user.get('age'),
             'created_at': user.get('created_at').isoformat(),
-            'account_type':user['account_type']
+            'account_type':user['account_type'],
+            'avatar':user['avatar'],
+            'phone':user['phone'],
         }
-        
+        # print(token)
         return JsonResponse({
             'message': 'Login successful',
             'user': user_data,
@@ -116,12 +120,17 @@ def login(request):
 def profile(request):
     try:
         collection = get_users_collection()
+        print(request.headers)
         user_id = getattr(request, 'user_id', None)
-        
+        print(request.user_id)
+        print(user_id)
+        print('user_id:', user_id, type(ObjectId(user_id)))
         if not user_id:
             return JsonResponse({'error': 'Authentication required'}, status=401)
+        print(user_id)
         
         user = collection.find_one({'_id': ObjectId(user_id)})
+        print(user)
         if not user:
             return JsonResponse({'error': 'User not found'}, status=404)
         
@@ -130,7 +139,8 @@ def profile(request):
             '_id': str(user['_id']),
             'name': user['name'],
             'email': user['email'],
-            'age': user.get('age'),
+            # 'age': user.get('age'),
+            'account_type':user.get('account_type'),
             'permissions':user.get('permissions'),
             'created_at': user.get('created_at').isoformat(),
         }
@@ -142,11 +152,6 @@ def profile(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
-import os
-from django.conf import settings
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
-import requests
 @csrf_exempt
 @require_http_methods(["POST"])
 def update_profile(request):
