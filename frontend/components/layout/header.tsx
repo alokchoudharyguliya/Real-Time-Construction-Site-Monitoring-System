@@ -138,7 +138,11 @@ export function Header({ onMenuClick }: HeaderProps) {
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
+                <DropdownMenuItem onClick={()=>{
+                  router.push('/');
+                  logout();
+                }
+                  }>
                   <LogOut className="mr-2 h-4 w-4" />
                   {t('logout')}
                 </DropdownMenuItem>

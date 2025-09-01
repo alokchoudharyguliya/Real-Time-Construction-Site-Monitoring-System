@@ -6,3 +6,9 @@ opencv-python
 dotenv
 flask
 flask-cors
+Django
+pymongo
+python-decouple
+djangorestframework
+PyJWT
+bcrypt

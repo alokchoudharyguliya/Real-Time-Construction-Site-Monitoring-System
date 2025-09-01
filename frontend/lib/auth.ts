@@ -16,42 +16,48 @@ export interface AuthState {
   isLoading: boolean;
 }
 
-// Mock authentication - replace with actual OAuth2 implementation
-export const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'contractor@example.com',
-    name: 'John Builder',
-    role: 'contractor',
-    avatar: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    phone: '+91 9876543210',
-    organization: 'BuildCorp Industries',
-    licenseNumber: 'CNT-2024-001',
-    permissions: ['upload_images', 'view_own_projects', 'edit_progress']
-  },
-  {
-    id: '2',
-    email: 'govt@example.com',
-    name: 'Sarah Inspector',
-    role: 'government',
-    avatar: 'https://images.pexels.com/photos/3586798/pexels-photo-3586798.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    phone: '+91 9876543211',
-    organization: 'Municipal Development Authority',
-    licenseNumber: 'GOV-2024-001',
-    permissions: ['view_all_projects', 'approve_stages', 'generate_reports', 'audit_progress']
-  }
-];
 
 export const authenticateUser = async (email: string, password: string): Promise<User | null> => {
-  // Simulate API call
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  const user = mockUsers.find(u => u.email === email);
-  return user || null;
+  const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' ,
+      'Authorization':'Bearer'
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = await response.json();
+
+  // Save JWT token to localStorage for session management
+  if (data.token) {
+    localStorage.setItem('jwt_token', data.token);
+  }
+
+  // Map backend user fields to frontend User interface
+  if (data.user) {
+    return {
+      id: data.user._id || data.user.id,
+      email: data.user.email,
+      name: data.user.name,
+      role: data.user.account_type || data.user.role, // adjust as per backend field
+      avatar: data.user.imageUrl || data.user.avatar,
+      phone: data.user.phone_number || data.user.phone,
+      organization: data.user.organization,
+      licenseNumber: data.user.licenseNumber,
+      permissions: data.user.permissions || [],
+    };
+  }
+
+  return null;
 };
 
 export const getCurrentUser = (): User | null => {
   const stored = localStorage.getItem('construction_user');
+  console.log(stored);
   return stored ? JSON.parse(stored) : null;
 };
 

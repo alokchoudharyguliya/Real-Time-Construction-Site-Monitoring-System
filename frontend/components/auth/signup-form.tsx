@@ -10,73 +10,74 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/hooks/use-auth';
-import { useLanguage } from '@/hooks/use-language';
-// import { authenticateUser } from '@/lib/auth';
 
-export function LoginForm() {
+export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
-  const { t } = useLanguage();
   const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, accountType: 'contractor' | 'government') => {
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    accountType: 'contractor' | 'government'
+  ) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     const formData = new FormData(e.currentTarget);
+    const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+    const age = formData.get('age') as string;
+    const organization = formData.get('organization') as string;
 
     try {
-      // Get token from localStorage if present
-      const token = localStorage.getItem('jwt_token');
-
-      // Send token in Authorization header if it exists
-      const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+      const response = await fetch('http://127.0.0.1:8000/api/auth/signup/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          age: age ? Number(age) : undefined,
+          organization,
+          account_type: accountType,
+        }),
       });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        setError('Invalid credentials or account type mismatch');
+        setError(data.error || 'Signup failed. Please try again.');
         setIsLoading(false);
         return;
       }
-      
-      const data = await response.json();
-      console.log(data);
 
-      // Save JWT token to localStorage for session management
+      // Store JWT token in localStorage
       if (data.token) {
+        console.log(data.token);
         localStorage.setItem('jwt_token', data.token);
       }
-
-      console.log(data);
-      // Map backend user fields to frontend User interface
-      if (data.user && data.user.account_type === accountType) {
+      
+      // Optionally, you can map backend user fields to your frontend User interface here
+      if (data.user) {
         login({
           id: data.user._id || data.user.id,
           email: data.user.email,
           name: data.user.name,
-          role: data.user.account_type || data.user.role,
-          avatar: data.user.imageUrl || data.user.avatar,
-          phone: data.user.phone_number || data.user.phone,
-          organization: data.user.organization,
-          licenseNumber: data.user.licenseNumber,
+          role: data.user.account_type || accountType,
+          avatar: data.user.imageUrl || '',
+          phone: data.user.phone_number || '',
+          organization: data.user.organization || '',
+          licenseNumber: data.user.licenseNumber || '',
           permissions: data.user.permissions || [],
         });
-
         router.push('/dashboard');
-      } else {
-        setError('Invalid credentials or account type mismatch');
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError('Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -98,15 +99,15 @@ export function LoginForm() {
             ConstructSight
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Construction Site Monitoring System
+            Create your account
           </p>
         </div>
 
         <Card className="backdrop-blur-sm bg-white/90 dark:bg-gray-800/90 border-0 shadow-xl">
           <CardHeader className="space-y-1 pb-4">
-            <h2 className="text-2xl font-bold text-center">{t('login')}</h2>
+            <h2 className="text-2xl font-bold text-center">Sign Up</h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-              Select your account type to continue
+              Select your account type to register
             </p>
           </CardHeader>
 
@@ -115,38 +116,46 @@ export function LoginForm() {
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="contractor" className="flex items-center space-x-2">
                   <Building2 className="h-4 w-4" />
-                  <span>{t('contractor')}</span>
+                  <span>Contractor</span>
                 </TabsTrigger>
                 <TabsTrigger value="government" className="flex items-center space-x-2">
                   <Shield className="h-4 w-4" />
-                  <span>{t('government')}</span>
+                  <span>Government</span>
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="contractor">
                 <form onSubmit={(e) => handleSubmit(e, 'contractor')} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">{t('email')}</Label>
+                    <Label htmlFor="contractor-name">Name</Label>
                     <Input
-                      id="email"
+                      id="contractor-name"
+                      name="name"
+                      type="text"
+                      placeholder="Your Name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contractor-email">Email</Label>
+                    <Input
+                      id="contractor-email"
                       name="email"
                       type="email"
                       placeholder="contractor@example.com"
                       required
-                      className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-
                   <div className="space-y-2">
-                    <Label htmlFor="password">{t('password')}</Label>
+                    <Label htmlFor="contractor-password">Password</Label>
                     <div className="relative">
                       <Input
-                        id="password"
+                        id="contractor-password"
                         name="password"
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         required
-                        className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+                        className="pr-10"
                       />
                       <button
                         type="button"
@@ -157,7 +166,24 @@ export function LoginForm() {
                       </button>
                     </div>
                   </div>
-
+                  <div className="space-y-2">
+                    <Label htmlFor="contractor-age">Age</Label>
+                    <Input
+                      id="contractor-age"
+                      name="age"
+                      type="number"
+                      placeholder="Age"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contractor-organization">Organization</Label>
+                    <Input
+                      id="contractor-organization"
+                      name="organization"
+                      type="text"
+                      placeholder="Organization"
+                    />
+                  </div>
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -167,13 +193,12 @@ export function LoginForm() {
                       {error}
                     </motion.div>
                   )}
-
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
                     disabled={isLoading}
                   >
-                    {isLoading ? t('loading') : t('login')}
+                    {isLoading ? 'Signing up...' : 'Sign Up'}
                   </Button>
                 </form>
               </TabsContent>
@@ -181,19 +206,27 @@ export function LoginForm() {
               <TabsContent value="government">
                 <form onSubmit={(e) => handleSubmit(e, 'government')} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="gov-email">{t('email')}</Label>
+                    <Label htmlFor="gov-name">Name</Label>
+                    <Input
+                      id="gov-name"
+                      name="name"
+                      type="text"
+                      placeholder="Your Name"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="gov-email">Email</Label>
                     <Input
                       id="gov-email"
                       name="email"
                       type="email"
                       placeholder="govt@example.com"
                       required
-                      className="transition-all duration-200 focus:ring-2 focus:ring-orange-500"
                     />
                   </div>
-
                   <div className="space-y-2">
-                    <Label htmlFor="gov-password">{t('password')}</Label>
+                    <Label htmlFor="gov-password">Password</Label>
                     <div className="relative">
                       <Input
                         id="gov-password"
@@ -201,7 +234,7 @@ export function LoginForm() {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         required
-                        className="pr-10 transition-all duration-200 focus:ring-2 focus:ring-orange-500"
+                        className="pr-10"
                       />
                       <button
                         type="button"
@@ -212,7 +245,24 @@ export function LoginForm() {
                       </button>
                     </div>
                   </div>
-
+                  <div className="space-y-2">
+                    <Label htmlFor="gov-age">Age</Label>
+                    <Input
+                      id="gov-age"
+                      name="age"
+                      type="number"
+                      placeholder="Age"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="gov-organization">Organization</Label>
+                    <Input
+                      id="gov-organization"
+                      name="organization"
+                      type="text"
+                      placeholder="Organization"
+                    />
+                  </div>
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -222,34 +272,16 @@ export function LoginForm() {
                       {error}
                     </motion.div>
                   )}
-
                   <Button
                     type="submit"
                     className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 transition-all duration-200"
                     disabled={isLoading}
                   >
-                    {isLoading ? t('loading') : t('login')}
+                    {isLoading ? 'Signing up...' : 'Sign Up'}
                   </Button>
                 </form>
               </TabsContent>
             </Tabs>
-
-            <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-              <p>Demo Credentials:</p>
-              <p>Contractor: contractor@example.com</p>
-              <p>Government: govt@example.com</p>
-              <p>Password: any</p>
-              <div className="mt-4">
-                <span>Don't have an account? </span>
-                <a
-                  href="/signup"
-                  className="text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  Sign up
-                </a>
-              </div>
-            </div>
-
           </CardContent>
         </Card>
       </motion.div>

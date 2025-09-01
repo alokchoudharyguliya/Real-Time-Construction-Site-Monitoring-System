@@ -5,6 +5,10 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "bcrypt>=4.3.0",
+    "django>=5.2.5",
+    "django-cors-headers>=4.7.0",
+    "djangorestframework>=3.16.1",
     "dotenv>=0.9.9",
     "flask>=3.1.1",
     "flask-cors>=6.0.1",
@@ -13,5 +17,8 @@ dependencies = [
     "numpy>=2.3.2",
     "opencv-python>=4.11.0.86",
     "pandas>=2.3.1",
+    "pyjwt>=2.10.1",
+    "pymongo>=4.14.1",
+    "python-decouple>=3.8",
     "tensorflow>=2.20.0",
 ]
