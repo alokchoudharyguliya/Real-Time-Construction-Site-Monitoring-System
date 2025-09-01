@@ -1,12 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  Building, 
-  FileText, 
+import {
+  User,
+  Mail,
+  Phone,
+  Building,
+  FileText,
   Shield,
   Edit3,
   Download
@@ -19,7 +19,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { useLanguage } from '@/hooks/use-language';
 
-export function ProfileView() {
+export function ProfileView({ onEdit }: { onEdit?: () => void }) {
   const { user } = useAuth();
   const { t } = useLanguage();
 
@@ -60,7 +60,7 @@ export function ProfileView() {
             Manage your account information and preferences
           </p>
         </div>
-        <Button className="gap-2">
+        <Button className="gap-2" onClick={onEdit}>
           <Edit3 className="h-4 w-4" />
           {t('edit')}
         </Button>
@@ -82,7 +82,7 @@ export function ProfileView() {
                     {user.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
-                
+
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     {user.name}
@@ -92,11 +92,11 @@ export function ProfileView() {
                   </p>
                 </div>
 
-                <Badge 
+                <Badge
                   variant="outline"
                   className={
-                    user.role === 'contractor' 
-                      ? 'border-blue-200 text-blue-700 bg-blue-50' 
+                    user.role === 'contractor'
+                      ? 'border-blue-200 text-blue-700 bg-blue-50'
                       : 'border-orange-200 text-orange-700 bg-orange-50'
                   }
                 >
@@ -164,8 +164,8 @@ export function ProfileView() {
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {user.permissions.map((permission) => (
-                    <Badge 
-                      key={permission} 
+                    <Badge
+                      key={permission}
                       variant="secondary"
                       className="text-xs"
                     >

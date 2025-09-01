@@ -1,5 +1,5 @@
 'use client';
-
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { MainLayout } from '@/components/layout/main-layout';
 import { StatsCards } from '@/components/dashboard/stats-cards';
@@ -10,8 +10,11 @@ import { useLanguage } from '@/hooks/use-language';
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const router = useRouter();
   const { t } = useLanguage();
-
+  if (!user) {
+    router.push('/');
+  }
   return (
     <MainLayout>
       <motion.div
@@ -26,7 +29,7 @@ export default function Dashboard() {
               {t('welcome')}, {user?.name}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              {user?.role === 'contractor' 
+              {user?.role === 'contractor'
                 ? 'Monitor your construction projects and upload progress updates'
                 : 'Oversee all construction projects and approve progress stages'
               }

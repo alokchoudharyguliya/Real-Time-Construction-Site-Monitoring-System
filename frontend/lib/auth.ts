@@ -2,7 +2,8 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'contractor' | 'government';
+  account_type: 'contractor' | 'government';
+  age: number | 0;
   avatar?: string;
   phone?: string;
   organization?: string;
@@ -43,7 +44,8 @@ export const authenticateUser = async (email: string, password: string): Promise
       id: data.user._id || data.user.id,
       email: data.user.email,
       name: data.user.name,
-      role: data.user.account_type || data.user.role, // adjust as per backend field
+      account_type: data.user.account_type || data.user.role, // adjust as per backend field
+      age:data.user.age, 
       avatar: data.user.imageUrl || data.user.avatar,
       phone: data.user.phone_number || data.user.phone,
       organization: data.user.organization,
