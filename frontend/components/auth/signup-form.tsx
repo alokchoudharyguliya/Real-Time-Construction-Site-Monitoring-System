@@ -30,7 +30,7 @@ export function SignupForm() {
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    const age = formData.get('age') as string;
+    // const age = formData.get('age') as string;
     const organization = formData.get('organization') as string;
 
     try {
@@ -41,7 +41,7 @@ export function SignupForm() {
           name,
           email,
           password,
-          age: age ? Number(age) : undefined,
+          // age: age ? Number(age) : undefined,
           organization,
           account_type: accountType,
         }),
@@ -60,14 +60,15 @@ export function SignupForm() {
         console.log(data.token);
         localStorage.setItem('jwt_token', data.token);
       }
-      
+
       // Optionally, you can map backend user fields to your frontend User interface here
       if (data.user) {
         login({
           id: data.user._id || data.user.id,
           email: data.user.email,
           name: data.user.name,
-          role: data.user.account_type || accountType,
+          // age: data.user.age,
+          account_type: data.user.account_type || accountType,
           avatar: data.user.imageUrl || '',
           phone: data.user.phone_number || '',
           organization: data.user.organization || '',
@@ -166,7 +167,7 @@ export function SignupForm() {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label htmlFor="contractor-age">Age</Label>
                     <Input
                       id="contractor-age"
@@ -174,7 +175,7 @@ export function SignupForm() {
                       type="number"
                       placeholder="Age"
                     />
-                  </div>
+                  </div> */}
                   <div className="space-y-2">
                     <Label htmlFor="contractor-organization">Organization</Label>
                     <Input
@@ -245,7 +246,7 @@ export function SignupForm() {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <Label htmlFor="gov-age">Age</Label>
                     <Input
                       id="gov-age"
@@ -253,7 +254,7 @@ export function SignupForm() {
                       type="number"
                       placeholder="Age"
                     />
-                  </div>
+                  </div> */}
                   <div className="space-y-2">
                     <Label htmlFor="gov-organization">Organization</Label>
                     <Input
@@ -282,8 +283,24 @@ export function SignupForm() {
                 </form>
               </TabsContent>
             </Tabs>
+            <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+              <p>Demo Credentials:</p>
+              <p>Contractor: contractor@example.com</p>
+              <p>Government: govt@example.com</p>
+              <p>Password: any</p>
+              <div className="mt-4">
+                <span>Already have an account? </span>
+                <a
+                  href="/"
+                  className="text-blue-600 hover:underline dark:text-blue-400"
+                >
+                  Log In
+                </a>
+              </div>
+            </div>
           </CardContent>
         </Card>
+        
       </motion.div>
     </div>
   );

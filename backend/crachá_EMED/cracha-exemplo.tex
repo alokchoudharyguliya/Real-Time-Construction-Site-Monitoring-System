@@ -1,0 +1,105 @@
+
+\documentclass[11pt]{article}
+\usepackage[landscape,paperwidth=95mm,paperheight=102mm,margin=3mm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\pagestyle{empty}
+
+% Define colors from the second document
+\definecolor{lightpastelpurple}{rgb}{0.69, 0.61, 0.85}
+\definecolor{darkheader}{rgb}{0.1, 0.1, 0.2}
+
+\begin{document}
+\vspace*{\fill}
+\noindent
+\centering
+\colorbox{gray!5}{%
+  \begin{minipage}[c][80mm][c]{79mm}
+    % Header Section with theme from second document
+    \centering
+    \colorbox{darkheader}{%
+      \begin{minipage}[c][10mm][c]{79mm}
+        \centering
+        \color{white}{\LARGE \textbf{IDENTITY CARD}}
+      \end{minipage}
+    }\\[2mm]
+    
+    % Main Content Container
+    \begin{minipage}[t]{79mm}
+      % Photo and Personal Info Side by Side
+      \begin{minipage}[t]{25mm}
+        \vspace{0mm}%
+        \centering
+        \fboxsep=0pt
+        \colorbox{white}{\includegraphics[width=23mm,height=23mm,keepaspectratio]{example-image}}
+      \end{minipage}
+      \hfill
+      \begin{minipage}[t]{52mm}
+        \vspace{0mm}%
+        {\Large \textbf{\MakeUppercase{John Doe}}}\\[2mm]
+        
+        % Account Information
+        {\small
+        \begin{tabular}{@{}>{\bfseries}l@{\hspace{1mm}}l@{}}
+          Account Type: & Premium \\
+          Organization: & Example Corp \\
+        \end{tabular}
+        }
+      \end{minipage}
+      
+      \vspace{3mm}
+      
+      % Contact Details Section with colored header
+      \colorbox{lightpastelpurple}{%
+        \begin{minipage}[c][4mm][c]{77mm}
+          \centering
+          \color{white}{\normalsize \textbf{CONTACT INFORMATION}}
+        \end{minipage}
+      }\\[1mm]
+      
+      {\small
+      \begin{tabular}{@{}>{\bfseries}l@{\hspace{2mm}}l@{}}
+        Email: & john.doe@example.com \\
+        Phone: & (123) 456-7890 \\
+        ID Number: & 123-456-789 \\
+        Valid Until: & 12/31/2025 \\
+        Issued: & 01/15/2023 \\
+      \end{tabular}
+      }
+      
+      \vspace{3mm}
+      
+      % Emergency Contact Section with colored header
+      \colorbox{lightpastelpurple}{%
+        \begin{minipage}[c][4mm][c]{77mm}
+          \centering
+          \color{white}{\normalsize \textbf{EMERGENCY CONTACT}}
+        \end{minipage}
+      }\\[1mm]
+      
+      {\small
+      \textbf{Jane Doe (555) 123-4567}
+      }
+      
+      \vspace{5mm}
+      
+    #   % Footer with theme from second document
+    #   \hspace{-1.2em}
+    #   \renewcommand{\arraystretch}{1.5}
+    #   \begin{tabular}{p{7.5cm}p{3.1cm}}
+        # \cellcolor{darkheader}      
+        # \textcolor{white}{{\textbf{\small Property of Example Corp}}}  & 
+        # \cellcolor{lightpastelpurple}  
+        # \textcolor{white}{{\textbf{\small ID}}} \\
+    #   \end{tabular}
+    \end{minipage}
+  \end{minipage}
+}
+\vspace*{\fill}
+\end{document}

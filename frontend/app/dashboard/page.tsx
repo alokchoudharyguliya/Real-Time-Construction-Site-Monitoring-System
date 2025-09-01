@@ -29,7 +29,7 @@ export default function Dashboard() {
               {t('welcome')}, {user?.name}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              {user?.role === 'contractor'
+              {user?.account_type === 'contractor'
                 ? 'Monitor your construction projects and upload progress updates'
                 : 'Oversee all construction projects and approve progress stages'
               }
@@ -41,7 +41,7 @@ export default function Dashboard() {
         <StatsCards />
 
         {/* Image Upload Section */}
-        {user?.role === 'contractor' && (
+        {user?.account_type === 'contractor' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

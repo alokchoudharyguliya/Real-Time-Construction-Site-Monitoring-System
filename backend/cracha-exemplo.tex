@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}   
+%\usepackage{csvtools}
+\usepackage[usenames,svgnames,dvipsnames,table]{xcolor}
+
+\usepackage[papersize={11.6cm,7.6cm},
+   margins=3mm,headheight=4mm,headsep=4mm,
+   croplength=2mm,cropgap=2mm,
+   cropmarks,cropframe,croptitle=Regiao\ de\ corte]{zwpagelayout}
+\pagestyle{empty}
+
+	\definecolor{lightpastelpurple}{rgb}{0.69, 0.61, 0.85}
+
+\begin{document}
+
+%\applyCSVfile{./lista-participantes.csv}
+{
+	\noindent
+	\begin{minipage}{11.6cm}
+		\vspace{-3em}
+\begin{minipage}[c][2cm][c]{0.25\textwidth}
+\begin{center}
+\includegraphics[scale=0.025]{logoufu.png}
+\end{center}
+\end{minipage}%
+\begin{minipage}[c][2.5cm][c]{0.7\textwidth}
+		\sffamily
+		\begin{large}
+		X EMED\\
+		Encontro Mineiro de Equações Diferenciais\\
+		Universidade Federal de Uberlândia\\
+		\end{large}
+\end{minipage}
+
+		\begin{center}
+		\framebox(160, 50){COLE AQUI O NOME} \par 
+%			{\Huge \insertNOME}\\  % NOME: Está associado à primeira coluna do arquivo CSV
+%			\bigskip
+%			{\large\insertINSTITUICAO}\\  % INSTITUICAO: Está associado à segunda coluna do arquivo CSV
+		\end{center}
+
+		\bigskip 
+
+		\hspace{-1.2em}
+		\renewcommand{\arraystretch}{3.00}
+		\begin{tabular}{p{7.5cm}p{3.1cm}}
+			\cellcolor{Black}      
+			\textcolor{white}{{\textbf{\normalsize UFU, 03 a 05/11/2016, Uberlândia-MG}}}  & 
+			\cellcolor{lightpastelpurple}  
+			\textcolor{white}{{\textbf{\Large Participante}}} 
+			%\textcolor{white}{{\textbf{\Large\,\,\,\insertTIPO}}} % TIPO: Está associado à terceira coluna do arquivo CSV
+			\\
+		\end{tabular}
+	\end{minipage}
+}
+\end{document}
+
+% Fim!

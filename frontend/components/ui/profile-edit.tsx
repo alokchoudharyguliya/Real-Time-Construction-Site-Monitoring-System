@@ -10,7 +10,7 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
   const { user, login } = useAuth();
   const [form, setForm] = useState({
     name: user?.name || '',
-    age: user?.age || '',
+    // age: user?.age || '',
     organization: user?.organization || '',
     phone: user?.phone || '',
   });
@@ -47,7 +47,7 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
       const token = localStorage.getItem('jwt_token');
       const formData = new FormData();
       formData.append('name', form.name);
-      formData.append('age', form.age.toString());
+      // formData.append('age', form.age.toString());
       formData.append('organization', form.organization);
       formData.append('phone', form.phone);
       if (image) {
@@ -118,10 +118,10 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
         <label className="block mb-1 font-medium">Full Name</label>
         <Input name="name" value={form.name} onChange={handleChange} required />
       </div>
-      <div>
+      {/* <div>
         <label className="block mb-1 font-medium">Age</label>
         <Input name="age" type="number" value={form.age} onChange={handleChange} />
-      </div>
+      </div> */}
       <div>
         <label className="block mb-1 font-medium">Organization</label>
         <Input name="organization" value={form.organization} onChange={handleChange} />

@@ -18,13 +18,40 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/use-auth';
 import { useLanguage } from '@/hooks/use-language';
-
+import { useCallback } from 'react';
 export function ProfileView({ onEdit }: { onEdit?: () => void }) {
   const { user } = useAuth();
   const { t } = useLanguage();
 
   if (!user) return null;
+  const handleExportProfile = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('jwt_token');
+      const response = await fetch('http://127.0.0.1:8000/api/auth/profile/idcard/', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
+      if (!response.ok) {
+        alert('Failed to download ID card');
+        return;
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'idcard.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Error downloading ID card');
+    }
+  }, []);
   const profileSections = [
     {
       title: 'Personal Information',
@@ -39,7 +66,7 @@ export function ProfileView({ onEdit }: { onEdit?: () => void }) {
       items: [
         { label: 'Organization', value: user.organization || 'Not specified', icon: Building },
         { label: 'License Number', value: user.licenseNumber || 'N/A', icon: FileText },
-        { label: 'Account Type', value: user.role, icon: Shield },
+        { label: 'Account Type', value: user.account_type, icon: Shield },
       ]
     }
   ];
@@ -88,23 +115,23 @@ export function ProfileView({ onEdit }: { onEdit?: () => void }) {
                     {user.name}
                   </h2>
                   <p className="text-gray-600 dark:text-gray-400 capitalize">
-                    {user.role}
+                    {user.account_type}
                   </p>
                 </div>
 
                 <Badge
                   variant="outline"
                   className={
-                    user.role === 'contractor'
+                    user.account_type === 'contractor'
                       ? 'border-blue-200 text-blue-700 bg-blue-50'
                       : 'border-orange-200 text-orange-700 bg-orange-50'
                   }
                 >
-                  {user.role === 'contractor' ? 'Licensed Contractor' : 'Government Official'}
+                  {user.account_type === 'contractor' ? 'Licensed Contractor' : 'Government Official'}
                 </Badge>
 
                 <div className="pt-4">
-                  <Button variant="outline" className="w-full gap-2">
+                  <Button variant="outline" className="w-full gap-2" onClick={handleExportProfile}>
                     <Download className="h-4 w-4" />
                     Export Profile
                   </Button>

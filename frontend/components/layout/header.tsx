@@ -124,7 +124,7 @@ export function Header({ onMenuClick }: HeaderProps) {
                   </Avatar>
                   <div className="hidden sm:block text-left">
                     <p className="text-sm font-medium">{user?.name}</p>
-                    <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                    <p className="text-xs text-gray-500 capitalize">{user?.account_type}</p>
                   </div>
                 </Button>
               </DropdownMenuTrigger>

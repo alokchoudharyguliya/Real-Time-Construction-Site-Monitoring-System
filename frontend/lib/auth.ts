@@ -3,7 +3,7 @@ export interface User {
   email: string;
   name: string;
   account_type: 'contractor' | 'government';
-  age: number | 0;
+  // age: number | 0;
   avatar?: string;
   phone?: string;
   organization?: string;
@@ -45,11 +45,10 @@ export const authenticateUser = async (email: string, password: string): Promise
       email: data.user.email,
       name: data.user.name,
       account_type: data.user.account_type || data.user.role, // adjust as per backend field
-      age:data.user.age, 
+      // age:data.user.age, 
       avatar: data.user.imageUrl || data.user.avatar,
       phone: data.user.phone_number || data.user.phone,
-      organization: data.user.organization,
-      licenseNumber: data.user.licenseNumber,
+      organization: data.user.organization || "",
       permissions: data.user.permissions || [],
     };
   }

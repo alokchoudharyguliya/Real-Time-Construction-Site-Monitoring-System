@@ -21,7 +21,7 @@ export function LoginForm() {
   const { t } = useLanguage();
   const router = useRouter();
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, accountType: 'contractor' | 'government') => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>, accountType: 'contractor' | 'government') => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
@@ -47,7 +47,7 @@ export function LoginForm() {
         setIsLoading(false);
         return;
       }
-      
+
       const data = await response.json();
       console.log(data);
 
@@ -63,10 +63,11 @@ export function LoginForm() {
           id: data.user._id || data.user.id,
           email: data.user.email,
           name: data.user.name,
-          role: data.user.account_type || data.user.role,
+          account_type: data.user.account_type || data.user.role,
           avatar: data.user.imageUrl || data.user.avatar,
           phone: data.user.phone_number || data.user.phone,
           organization: data.user.organization,
+          // age: data.age,
           licenseNumber: data.user.licenseNumber,
           permissions: data.user.permissions || [],
         });

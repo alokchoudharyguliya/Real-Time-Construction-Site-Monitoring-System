@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[brazil]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[pdftex]{graphicx}   
+\usepackage[usenames,svgnames,dvipsnames,table]{xcolor}
+\usepackage[papersize={7.6cm,11.6cm},
+   margins=3mm,headheight=4mm,headsep=4mm,
+   croplength=2mm,cropgap=2mm,
+   cropmarks,cropframe,croptitle=Regiao\ de\ corte]{zwpagelayout}
+\pagestyle{empty}
+\definecolor{lightpastelpurple}{rgb}{0.68, 0.67, 0.83}
+\usepackage[pages=some,placement=center]{background}
+\backgroundsetup{scale=0.07,
+color=black,
+opacity=0.3,
+angle=0,
+contents={\includegraphics{logoufu.png}}
+}
+
+\begin{document}
+\BgThispage
+{
+	\noindent
+	\begin{minipage}{7.6cm}
+		\vspace{-3em}
+		\hspace{-1em}
+		\includegraphics[width=7.45cm]{emed.png}
+	\vspace{1.7cm}
+		\begin{center}
+		\framebox(150, 50){COLE AQUI O NOME } \par 
+		\end{center}
+		\vspace{1.8cm}
+
+		\hspace{-1.4em}
+		\renewcommand{\arraystretch}{3.00}
+		\begin{tabular}{c}
+		\cellcolor{lightpastelpurple}  
+			\textcolor{white}{{\textbf{\Large Participante}}}\\
+			\cellcolor{Black}      
+			\textcolor{white}{{\textbf{\large 03 a 05/11/2016, Uberlândia-MG}}}  
+		\end{tabular}
+	\end{minipage}
+}
+\newpage
+\BgThispage
+{
+	\noindent
+	\begin{minipage}{7.6cm}
+		\vspace{-3em}
+		\hspace{-1em}
+		\includegraphics[width=7.45cm]{emed.png}
+	\vspace{1.7cm}
+		\begin{center}
+		\framebox(150, 50){COLE AQUI O NOME } \par 
+		\end{center}
+		\vspace{1.8cm}
+		\hspace{-1.4em}
+		\renewcommand{\arraystretch}{3.00}
+		\begin{tabular}{c}
+		\cellcolor{lightpastelpurple}  
+			\textcolor{white}{{\textbf{\Large Comissão Organizadora}}}\\
+			\cellcolor{Black}      
+			\textcolor{white}{{\textbf{\large 03 a 05/11/2016, Uberlândia-MG}}}  
+		\end{tabular}
+	\end{minipage}
+}
+\end{document}
