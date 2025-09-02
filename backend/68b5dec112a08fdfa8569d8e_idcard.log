@@ -1,0 +1,293 @@
+This is XeTeX, Version 3.141592653-2.6-0.999996 (MiKTeX 24.4) (preloaded format=xelatex 2025.9.2)  2 SEP 2025 09:33
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./68b5dec112a08fdfa8569d8e_idcard.tex
+(68b5dec112a08fdfa8569d8e_idcard.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-03-14>
+(C:\Program Files\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(C:\Program Files\MiKTeX\tex/latex/base\size11.clo
+File: size11.clo 2023/05/17 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count184
+\c@section=\count185
+\c@subsection=\count186
+\c@subsubsection=\count187
+\c@paragraph=\count188
+\c@subparagraph=\count189
+\c@figure=\count190
+\c@table=\count191
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\bibindent=\dimen140
+)
+(C:\Program Files\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(C:\Program Files\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+)
+(C:\Program Files\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+))
+\Gm@cnth=\count192
+\Gm@cntv=\count193
+\c@Gm@tempcnt=\count194
+\Gm@bindingoffset=\dimen141
+\Gm@wd@mp=\dimen142
+\Gm@odd@mp=\dimen143
+\Gm@even@mp=\dimen144
+\Gm@layoutwidth=\dimen145
+\Gm@layoutheight=\dimen146
+\Gm@layouthoffset=\dimen147
+\Gm@layoutvoffset=\dimen148
+\Gm@dimlist=\toks18
+
+(C:\Program Files\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Program Files\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks19
+\inpenc@posthook=\toks20
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (C:\Program Files\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2023/11/15 v3.01 LaTeX color extensions (UK)
+
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: xetex.def on input line 274.
+
+(C:\Program Files\MiKTeX\tex/latex/graphics-def\xetex.def
+File: xetex.def 2022/09/22 v5.0n Graphics/color driver for xetex
+)
+(C:\Program Files\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1350.
+Package xcolor Info: Model `RGB' extended on input line 1366.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1368.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1371.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1372.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1373.
+)
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: xetex.def on input line 107.
+)
+\Gin@req@height=\dimen149
+\Gin@req@width=\dimen150
+)
+(C:\Program Files\MiKTeX\tex/latex/tools\array.sty
+Package: array 2023/10/16 v2.5g Tabular extension package (FMi)
+\col@sep=\dimen151
+\ar@mcellbox=\box51
+\extrarowheight=\dimen152
+\NC@list=\toks21
+\extratabsurround=\skip50
+\backup@length=\skip51
+\ar@cellbox=\box52
+)
+(C:\Program Files\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen153
+\lightrulewidth=\dimen154
+\cmidrulewidth=\dimen155
+\belowrulesep=\dimen156
+\belowbottomsep=\dimen157
+\aboverulesep=\dimen158
+\abovetopsep=\dimen159
+\cmidrulesep=\dimen160
+\cmidrulekern=\dimen161
+\defaultaddspace=\dimen162
+\@cmidla=\count195
+\@cmidlb=\count196
+\@aboverulesep=\dimen163
+\@belowrulesep=\dimen164
+\@thisruleclass=\count197
+\@lastruleclass=\count198
+\@thisrulewidth=\dimen165
+)
+(C:\Program Files\MiKTeX\tex/latex/ragged2e\ragged2e.sty
+Package: ragged2e 2023/06/22 v3.6 ragged2e Package
+\CenteringLeftskip=\skip52
+\RaggedLeftLeftskip=\skip53
+\RaggedRightLeftskip=\skip54
+\CenteringRightskip=\skip55
+\RaggedLeftRightskip=\skip56
+\RaggedRightRightskip=\skip57
+\CenteringParfillskip=\skip58
+\RaggedLeftParfillskip=\skip59
+\RaggedRightParfillskip=\skip60
+\JustifyingParfillskip=\skip61
+\CenteringParindent=\skip62
+\RaggedLeftParindent=\skip63
+\RaggedRightParindent=\skip64
+\JustifyingParindent=\skip65
+)
+(C:\Program Files\MiKTeX\tex/latex/psnfss\helvet.sty
+Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
+)
+LaTeX Font Info:    Trying to load font information for TU+phv on input line 18
+.
+LaTeX Font Info:    No file TUphv.fd. on input line 18.
+
+
+LaTeX Font Warning: Font shape `TU/phv/m/n' undefined
+(Font)              using `TU/lmr/m/n' instead on input line 18.
+
+(C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-xetex.def
+File: l3backend-xetex.def 2024-03-14 L3 backend support: XeTeX
+\g__graphics_track_int=\count199
+\l__pdf_internal_box=\box53
+\g__pdf_backend_object_int=\count266
+\g__pdf_backend_annotation_int=\count267
+\g__pdf_backend_link_int=\count268
+)
+No file 68b5dec112a08fdfa8569d8e_idcard.aux.
+\openout1 = `68b5dec112a08fdfa8569d8e_idcard.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
+LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 1
+8.
+(C:\Program Files\MiKTeX\tex/latex/base\ts1cmr.fd
+File: ts1cmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+*geometry* verbose mode - [ preamble ] result:
+* driver: xetex
+* paper: custom
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: landscape 
+* h-part:(L,W,R)=(8.53581pt, 273.14648pt, 8.53581pt)
+* v-part:(T,H,B)=(8.53581pt, 273.14648pt, 8.53581pt)
+* \paperwidth=290.21811pt
+* \paperheight=290.21811pt
+* \textwidth=273.14648pt
+* \textheight=273.14648pt
+* \oddsidemargin=-63.73418pt
+* \evensidemargin=-63.73418pt
+* \topmargin=-100.73418pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=11.0pt
+* \footskip=30.0pt
+* \marginparwidth=59.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+
+LaTeX Font Warning: Font shape `TU/phv/b/n' undefined
+(Font)              using `TU/phv/m/n' instead on input line 104.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 104.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 104.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 104.
+File: logoufu.png Graphic file (type bmp)
+<logoufu.png>
+
+Overfull \hbox (4.75685pt too wide) in paragraph at lines 104--104
+ [][][][][][][] 
+ []
+
+File: 68b5dec112a08fdfa8569d8e_profile.jpg Graphic file (type bmp)
+<68b5dec112a08fdfa8569d8e_profile.jpg>
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 104.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 104.
+
+Overfull \hbox (3.9558pt too wide) in paragraph at lines 104--104
+[][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--104
+
+ []
+
+
+Overfull \hbox (3.9558pt too wide) in paragraph at lines 104--104
+[][][][][][][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--104
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 104--104
+
+ []
+
+[1
+
+] (68b5dec112a08fdfa8569d8e_idcard.aux)
+ ***********
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-03-14>
+ ***********
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2286 strings out of 409554
+ 36612 string characters out of 5776244
+ 1922148 words of memory out of 5000000
+ 24444 multiletter control sequences out of 15000+600000
+ 560840 words of font info for 49 fonts, out of 8000000 for 9000
+ 1348 hyphenation exceptions out of 8191
+ 57i,13n,65p,228b,412s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+Output written on 68b5dec112a08fdfa8569d8e_idcard.pdf (1 page).
