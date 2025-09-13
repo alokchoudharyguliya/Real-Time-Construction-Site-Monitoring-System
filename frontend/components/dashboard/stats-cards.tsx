@@ -79,7 +79,7 @@ export function StatsCards() {
   const { user } = useAuth();
   const { t } = useLanguage();
   
-  const stats = user?.role === 'contractor' ? contractorStats : governmentStats;
+  const stats = user?.account_type === 'contractor' ? contractorStats : governmentStats;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

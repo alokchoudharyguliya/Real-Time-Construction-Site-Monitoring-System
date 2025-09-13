@@ -1,5 +1,5 @@
 'use client';
-
+import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Building2, Plus, Filter } from 'lucide-react';
 import { MainLayout } from '@/components/layout/main-layout';
@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+
+
 
 const allProjects = [
   {
@@ -60,7 +62,7 @@ export default function Projects() {
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200';
     }
   };
-
+  const router = useRouter();
   return (
     <MainLayout>
       <motion.div
@@ -141,7 +143,7 @@ export default function Projects() {
                       Deadline: {new Date(project.deadline).toLocaleDateString()}
                     </span>
                     <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => router.push(`/projects/${project.id}`)}>
                         View Details
                       </Button>
                       <Button size="sm">
@@ -158,3 +160,4 @@ export default function Projects() {
     </MainLayout>
   );
 }
+

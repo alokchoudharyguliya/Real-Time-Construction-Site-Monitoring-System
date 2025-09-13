@@ -253,7 +253,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   ];
 
   const filteredNavigation = navigation.filter(item => 
-    item.roles.includes(user?.role || 'contractor')
+    item.roles.includes(user?.account_type || 'contractor')
   );
 
   // Close sidebar on mobile if clicked outside
@@ -380,7 +380,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
-                  {user?.role === 'contractor' ? 'C' : 'G'}
+                  {user?.account_type === 'contractor' ? 'C' : 'G'}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
@@ -388,7 +388,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {user?.name}
                 </p>
                 <p className="text-xs text-gray-400 capitalize">
-                  {user?.role}
+                  {user?.account_type}
                 </p>
               </div>
             </div>
