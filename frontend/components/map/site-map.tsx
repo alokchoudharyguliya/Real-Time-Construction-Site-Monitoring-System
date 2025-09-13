@@ -57,7 +57,7 @@ const mockSites: Site[] = [
   }
 ];
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyB6dfwH0efqPp-EwWEs7oKFm3udcy9sOvg';
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export function SiteMap() {
   const [progress, setProgress] = useState([0]);
