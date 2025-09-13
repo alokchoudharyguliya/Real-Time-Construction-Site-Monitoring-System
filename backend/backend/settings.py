@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'myapp',
     'auth_app',  # Add this line,
     'corsheaders',  # Add this
+    'rest_framework',
+    'channels',
+    'video_stream',
 
 ]
 
@@ -122,8 +125,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
-
+# Add for Channels
+ASGI_APPLICATION = 'webcam_project.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
