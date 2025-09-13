@@ -1,18 +1,20 @@
 'use client';
-
+/// <reference types="@types/google.maps" />
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { Slider } from '@/components/ui/slider';
+import { SkipBack, SkipForward, Pause, Play } from 'lucide-react';
 import { MapPin, Filter, Search, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from '@/components/ui/select';
 
 interface Site {
@@ -55,12 +57,56 @@ const mockSites: Site[] = [
   }
 ];
 
+const GOOGLE_MAPS_API_KEY = 'AIzaSyB6dfwH0efqPp-EwWEs7oKFm3udcy9sOvg';
+
 export function SiteMap() {
+  const [progress, setProgress] = useState([0]);
+const [isPlaying, setIsPlaying] = useState(false);
+
+const togglePlayback = () => setIsPlaying((prev) => !prev);
   const mapRef = useRef<HTMLDivElement>(null);
   const [selectedSite, setSelectedSite] = useState<Site | null>(null);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [map, setMap] = useState<google.maps.Map | null>(null);
 
+  useEffect(() => {
+    // Load Google Maps script if not already loaded
+    if (!window.google) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}`;
+      script.async = true;
+      script.onload = () => initMap();
+      document.body.appendChild(script);
+    } else {
+      initMap();
+    }
+
+    function initMap() {
+      if (mapRef.current && !map) {
+        const center = { lat: 28.6139, lng: 77.2090 };
+        const mapInstance = new window.google.maps.Map(mapRef.current, {
+          center,
+          zoom: 11,
+          mapTypeId: 'roadmap',
+        });
+
+        // Add markers for each site
+        mockSites.forEach(site => {
+          const marker = new window.google.maps.Marker({
+            position: { lat: site.lat, lng: site.lng },
+            map: mapInstance,
+            title: site.name,
+          });
+
+          marker.addListener('click', () => setSelectedSite(site));
+        });
+
+        setMap(mapInstance);
+      }
+    }
+    // eslint-disable-next-line
+  }, []);
   useEffect(() => {
     // Initialize Google Maps
     // This would be replaced with actual Google Maps integration
@@ -114,8 +160,8 @@ export function SiteMap() {
             </div>
           </CardHeader>
           <CardContent>
-            <div 
-              ref={mapRef} 
+            <div
+              ref={mapRef}
               className="w-full h-96 lg:h-[500px] rounded-lg border border-gray-200 dark:border-gray-700"
             />
           </CardContent>
@@ -140,7 +186,7 @@ export function SiteMap() {
                   className="pl-10"
                 />
               </div>
-              
+
               <Select value={filter} onValueChange={setFilter}>
                 <SelectTrigger>
                   <Filter className="h-4 w-4 mr-2" />
@@ -165,11 +211,10 @@ export function SiteMap() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                   onClick={() => setSelectedSite(site)}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
-                    selectedSite?.id === site.id 
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
-                  }`}
+                  className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${selectedSite?.id === site.id
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                    }`}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <h4 className="font-medium text-sm text-gray-900 dark:text-white">
@@ -179,14 +224,14 @@ export function SiteMap() {
                       {site.status}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400">
                       <span>Progress</span>
                       <span>{site.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
-                      <div 
+                      <div
                         className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
                         style={{ width: `${site.progress}%` }}
                       />
@@ -213,17 +258,32 @@ export function SiteMap() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setProgress([Math.max(progress[0] - 10, 0)])}
+                    aria-label="Previous Stage"
+                  >
                     <SkipBack className="h-4 w-4" />
                   </Button>
-                  <Button variant="outline" size="sm" onClick={togglePlayback}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={togglePlayback}
+                    aria-label={isPlaying ? "Pause" : "Play"}
+                  >
                     {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setProgress([Math.min(progress[0] + 10, 100)])}
+                    aria-label="Next Stage"
+                  >
                     <SkipForward className="h-4 w-4" />
                   </Button>
                 </div>
-                
+
                 <Slider
                   value={progress}
                   onValueChange={setProgress}
@@ -231,11 +291,14 @@ export function SiteMap() {
                   step={1}
                   className="w-full"
                 />
-                
+
                 <div className="text-center">
                   <p className="text-sm font-medium">{selectedSite.name}</p>
                   <p className="text-xs text-gray-500">
                     {progress[0]}% Complete
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Current Stage: <span className="font-semibold">{selectedSite.stage}</span>
                   </p>
                 </div>
               </CardContent>
@@ -245,4 +308,4 @@ export function SiteMap() {
       </div>
     </div>
   );
-}
+} 
