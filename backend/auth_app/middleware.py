@@ -7,7 +7,9 @@ class JWTAuthenticationMiddleware:
 
     def __call__(self, request):
         # Skip authentication for these paths
-        if request.path in ['/api/auth/signup/', '/api/auth/login/']:
+        # if request.path in ['/api/auth/signup/', '/api/auth/login/','/video/video_feed/']:
+        #     return self.get_response(request)
+        if request.path.rstrip('/') in ['/api/auth/signup', '/api/auth/login', '/video/video_feed']:
             return self.get_response(request)
         
         # Check for token in Authorization header

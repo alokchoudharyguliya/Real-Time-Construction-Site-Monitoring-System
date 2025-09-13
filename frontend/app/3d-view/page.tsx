@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { MainLayout } from '@/components/layout/main-layout';
 import { ThreeViewer } from '@/components/3d/three-viewer';
 import { useLanguage } from '@/hooks/use-language';
-
 export default function ThreeDView() {
   const { t } = useLanguage();
 
@@ -18,7 +17,7 @@ export default function ThreeDView() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {t('3d_view')}
+            {/* {t('3d_view')} */}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Interactive 3D visualization of construction progress

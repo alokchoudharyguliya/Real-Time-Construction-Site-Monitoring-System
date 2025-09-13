@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'video_stream',
-
 ]
 
 MIDDLEWARE = [
@@ -59,16 +58,16 @@ MIDDLEWARE = [
     'auth_app.middleware.JWTAuthenticationMiddleware',  # Add this line
 ]
 # CORS Configuration
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",    # React dev server
-    "http://127.0.0.1:3000",    # React dev server
-    "http://localhost:8000",    # Django dev server
-    "http://127.0.0.1:8000",    # Django dev server
-    "http://localhost:8080",    # Vue.js dev server
-    "http://127.0.0.1:8080",    # Vue.js dev server
-    "https://yourdomain.com",   # Your production domain
-]
-# CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",    # React dev server
+#     "http://127.0.0.1:3000",    # React dev server
+#     "http://localhost:8000",    # Django dev server
+#     "http://127.0.0.1:8000",    # Django dev server
+#     "http://localhost:8080",    # Vue.js dev server
+#     "http://127.0.0.1:8080",    # Vue.js dev server
+#     "https://yourdomain.com",   # Your production domain
+# ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Allow credentials (cookies, authorization headers)

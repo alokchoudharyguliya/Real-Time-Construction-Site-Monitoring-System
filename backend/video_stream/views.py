@@ -6,14 +6,17 @@ from rest_framework.decorators import api_view
 from .services import VideoCamera, gen
 import json
 
+import cv2
+import time
 # Initialize camera
+import numpy as np
 camera = VideoCamera()
 
 @gzip.gzip_page
 def video_feed(request):
     try:
         return StreamingHttpResponse(gen(camera), 
-                     content_type="multipart/x-mixed-replace;boundary=frame")
+                        content_type="multipart/x-mixed-replace;boundary=frame")
     except Exception as e:
         print(e)
 

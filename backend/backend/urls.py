@@ -21,4 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('auth_app.urls')),
     path('myapp/', include('myapp.urls')),
+    path('api/', include('myapp.urls')),
+    path('video/', include('video_stream.urls')),
 ]
