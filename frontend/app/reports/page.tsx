@@ -40,6 +40,7 @@ export default function Reports() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [filterType, setFilterType] = useState<string>('all');
   const [dateRange, setDateRange] = useState<string>('all');
+  const [totalReports, setTotalReports] = useState<number | null>(null);
   const [form, setForm] = useState({
     title: '',
     type: 'progress',
@@ -81,6 +82,19 @@ export default function Reports() {
     };
 
     fetchReports();
+    // fetch public total count
+    (async () => {
+      try {
+        const res = await fetch('http://127.0.0.1:8000/api/reports/public-count/');
+        if (!res.ok) throw new Error(`Count fetch failed: ${res.status}`);
+        const d = await res.json();
+        const count = d.count ?? d.total ?? null;
+        if (mounted) setTotalReports(typeof count === 'number' ? count : null);
+      } catch (err) {
+        console.warn('Failed to fetch reports count', err);
+        if (mounted) setTotalReports(null);
+      }
+    })();
     return () => { mounted = false; };
   }, []);
 
@@ -257,7 +271,7 @@ export default function Reports() {
                   <BarChart3 className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">24</p>
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalReports ?? 24}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Total Reports</p>
                 </div>
               </div>

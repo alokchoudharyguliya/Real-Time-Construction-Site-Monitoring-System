@@ -9,49 +9,65 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const contractors = [
-  {
-    id: '1',
-    name: 'BuildCorp Industries',
-    contactPerson: 'John Builder',
-    email: 'john@buildcorp.com',
-    phone: '+91 9876543210',
-    license: 'CNT-2024-001',
-    rating: 4.8,
-    activeProjects: 5,
-    completedProjects: 12,
-    location: 'Delhi NCR',
-    avatar: 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
-  },
-  {
-    id: '2',
-    name: 'Urban Developers',
-    contactPerson: 'Sarah Khan',
-    email: 'sarah@urban.com',
-    phone: '+91 9876543211',
-    license: 'CNT-2024-002',
-    rating: 4.5,
-    activeProjects: 3,
-    completedProjects: 8,
-    location: 'Mumbai',
-    avatar: 'https://images.pexels.com/photos/3586798/pexels-photo-3586798.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
-  },
-  {
-    id: '3',
-    name: 'Modern Constructions',
-    contactPerson: 'Raj Patel',
-    email: 'raj@modern.com',
-    phone: '+91 9876543212',
-    license: 'CNT-2024-003',
-    rating: 4.9,
-    activeProjects: 2,
-    completedProjects: 15,
-    location: 'Bangalore',
-    avatar: 'https://images.pexels.com/photos/3760069/pexels-photo-3760069.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'
-  }
-];
+import { useState, useEffect } from 'react';
+
+type Contractor = {
+  id: string | number;
+  name: string;
+  contactPerson?: string;
+  email?: string;
+  phone?: string;
+  license?: string;
+  rating?: number;
+  activeProjects?: string[];
+  completedProjects?: string[];
+  location?: string;
+  avatar?: string;
+};
+
+const defaultAvatar = 'https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop';
+
 
 export default function Contractors() {
+  const [items, setItems] = useState<Contractor[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchContractors = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch('http://localhost:8000/api/users/public-contractor/');
+        if (!res.ok) throw new Error(`Failed to fetch contractors: ${res.status}`);
+        const json = await res.json();
+        // API returns { inspectors: [...] }
+        const list = Array.isArray(json.inspectors) ? json.inspectors : [];
+        const mapped: Contractor[] = list.map((u: any) => ({
+          id: u.id,
+          name: u.name || u.username || u.email || `Contractor ${u.id}`,
+          // contactPerson: u.first_name || u.last_name || undefined,
+          email: u.email,
+          phone: u.phone ?? undefined,
+          license: u.licenseNo ?? u.license ?? undefined,
+          rating: u.rating ?? undefined,
+          activeProjects: u.activeProjects ?? 0,
+          completedProjects: u.completedProjects ?? 0,
+          location: u.location ?? undefined,
+          avatar: u.avatar_url ?? defaultAvatar,
+        }));
+        if (mounted) setItems(mapped);
+      } catch (err: any) {
+        console.error(err);
+        if (mounted) setError(err.message ?? 'Unknown error');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    fetchContractors();
+    return () => { mounted = false; };
+  }, []);
+
   return (
     <MainLayout>
       <motion.div
@@ -155,7 +171,7 @@ export default function Contractors() {
 
         {/* Contractors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {contractors.map((contractor, index) => (
+          {items.map((contractor, index) => (
             <motion.div
               key={contractor.id}
               initial={{ opacity: 0, y: 20 }}
@@ -166,9 +182,9 @@ export default function Contractors() {
                 <CardHeader className="pb-4">
                   <div className="flex items-center space-x-4">
                     <Avatar className="h-12 w-12">
-                      <AvatarImage src={contractor.avatar} alt={contractor.contactPerson} />
+                      <AvatarImage src={contractor.avatar} alt={contractor.contactPerson ?? contractor.name} />
                       <AvatarFallback>
-                        {contractor.contactPerson.charAt(0)}
+                        {(contractor.contactPerson ?? contractor.name ?? '').charAt(0) || ''}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
@@ -176,7 +192,7 @@ export default function Contractors() {
                         {contractor.name}
                       </h3>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {contractor.contactPerson}
+                        {/* {contractor.contactPerson} */}
                       </p>
                     </div>
                   </div>

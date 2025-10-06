@@ -6,7 +6,6 @@ export interface User {
   // age: number | 0;
   avatar?: string;
   phone?: string;
-  organization?: string;
   licenseNumber?: string;
   permissions: string[];
 }
@@ -49,7 +48,6 @@ export const authenticateUser = async (email: string, password: string): Promise
       // age:data.user.age, 
       avatar: data.user.imageUrl || data.user.avatar,
       phone: data.user.phone_number || data.user.phone,
-      organization: data.user.organization || "",
       permissions: data.user.permissions || [],
     };
   }

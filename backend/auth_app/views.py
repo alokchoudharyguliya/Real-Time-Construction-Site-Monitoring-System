@@ -19,7 +19,7 @@ User = get_user_model()
 def signup(request):
     try:
         data = json.loads(request.body)
-
+        print(data)
         # Validate required fields
         required_fields = ['username', 'password', 'email','account_type']
         for field in required_fields:
@@ -32,11 +32,11 @@ def signup(request):
         print(data)
         # Create Django user
         user = User(username=data['username'], email=data['email'],account_type=data['account_type'])
+        print(user)
         # optional fields
         user.name = data.get('name', '') if hasattr(user, 'name') else None
         user.set_password(data['password'])
         user.save()
-
         token = generate_jwt_token(user.pk, user.email)
 
         user_data = {
@@ -46,7 +46,7 @@ def signup(request):
             'name': getattr(user, 'name', None),
             'account_type': getattr(user, 'account_type', None),
         }
-
+        # print(user_data)
         return JsonResponse({'message': 'User created successfully', 'user': user_data, 'token': token}, status=201, encoder=JSONEncoder)
         
     except json.JSONDecodeError:
