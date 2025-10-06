@@ -43,8 +43,16 @@ INSTALLED_APPS = [
     'corsheaders',  # Add this
     'rest_framework',
     'channels',
+    'project',
+    'report',
+    'user',
     'video_stream',
 ]
+
+# Use a custom user model defined in the `user` app. This prevents Django
+# from treating both the built-in `auth.User` and `user.User` as separate
+# models which causes reverse accessor collisions (groups, permissions).
+AUTH_USER_MODEL = 'user.User'
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -55,8 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'auth_app.middleware.JWTAuthenticationMiddleware',  # Add this line
 ]
+
 # CORS Configuration
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:3000",    # React dev server
@@ -187,3 +195,21 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Media files (uploaded reports). In development these are served by Django's static
+# file server. For production, configure a proper storage (S3) and CDN.
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# Django REST Framework settings (simple defaults). Customize authentication
+# and pagination to your project's needs.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'auth_app.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
