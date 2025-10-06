@@ -11,96 +11,23 @@
 //   return [
 //     { id: '1' },
 //     { id: '2' },
-//     { id: '3' },
-//     { id: '4' }
-//   ];
-// }
+// (This page was commented out previously. Provide a minimal default export so Next treats this file as a module.)
 
-// const mockProject = {
-//   id: '1',
-//   name: 'Metro Station Complex',
-//   contractor: 'BuildCorp Industries',
-//   location: 'Connaught Place, Delhi',
-//   progress: 75,
-//   status: 'on-track',
-//   budget: '₹50 Cr',
+export default function CameraPlaceholderPage() {
+	return (
+		<div className="max-w-5xl mx-auto py-8">
+			<h2 className="text-xl font-semibold">Camera page (placeholder)</h2>
+			<p className="text-sm text-gray-600">This route is currently a placeholder.</p>
+		</div>
+	);
+}
+
+// Provide a few example params for static export
+export function generateStaticParams() {
+	return [
+		{ id: 'cam1' },
+		{ id: 'cam2' },
+		{ id: 'cam3' }
+	];
+}
 //   deadline: '2024-06-15',
-//   stages: [
-//     { name: 'Foundation', date: '2023-01-10' },
-//     { name: 'Superstructure', date: '2023-06-15' },
-//     { name: 'Finishing', date: '2024-04-01' }
-//   ],
-//   cameras: [
-//     { id: 'cam1', name: 'Gate Camera', thumbnail: '/camera1.jpg' },
-//     { id: 'cam2', name: 'Main Hall', thumbnail: '/camera2.jpg' },
-//     { id: 'cam3', name: 'Perimeter', thumbnail: '/camera3.jpg' }
-//   ]
-// };
-
-// export default function ProjectPage() {
-//   // const params = useParams();
-//   // Fetch project data using params.id if needed
-
-//   return (
-//     <div className="max-w-5xl mx-auto py-8 space-y-8">
-//       {/* Header */}
-//       <Card>
-//         <CardHeader>
-//           <CardTitle className="text-2xl">{mockProject.name}</CardTitle>
-//           <div className="flex items-center space-x-2 mt-2">
-//             <Badge>{mockProject.status.replace('-', ' ')}</Badge>
-//             <span className="text-gray-600">{mockProject.location}</span>
-//           </div>
-//         </CardHeader>
-//         <CardContent>
-          
-//           <div className="space-y-2">
-//             <div className="flex justify-between text-sm">
-//               <span className="text-gray-600">Progress</span>
-//               <span className="font-medium">{mockProject.progress}%</span>
-//             </div>
-//             <Progress value={mockProject.progress} className="h-2" />
-//           </div>
-//           <div className="text-sm text-gray-600 mt-2">
-//             Deadline: {new Date(mockProject.deadline).toLocaleDateString()}
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//       {/* Status Timeline */}
-//       <Card>
-//         <CardHeader>
-//           <CardTitle className="text-lg">Project Timeline</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           <ul className="space-y-2">
-//             {mockProject.stages.map((stage) => (
-//               <li key={stage.name} className="flex justify-between">
-//                 <span>{stage.name}</span>
-//                 <span className="text-gray-500">{new Date(stage.date).toLocaleDateString()}</span>
-//               </li>
-//             ))}
-//           </ul>
-//         </CardContent>
-//       </Card>
-
-//       {/* Camera Footage Grid */}
-//       <Card>
-//         <CardHeader>
-//           <CardTitle className="text-lg">Camera Footage</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//             {mockProject.cameras.map((cam) => (
-//               <Button key={cam.id} variant="outline" className="flex flex-col items-center p-4">
-//                 <img src={cam.thumbnail} alt={cam.name} className="w-24 h-16 object-cover rounded mb-2" />
-//                 <span className="font-medium">{cam.name}</span>
-//               </Button>
-//             ))}
-//           </div>
-//         </CardContent>
-//       </Card>
-
-//     </div>
-//   );
-// }

@@ -32,6 +32,7 @@ export const useAuthProvider = () => {
 
   const login = (user: User) => {
     setUser(user);
+    console.log(user);
     setCurrentUser(user);
   };
 

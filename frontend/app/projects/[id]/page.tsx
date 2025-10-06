@@ -1,6 +1,5 @@
 
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -37,100 +36,12 @@ const mockProject = {
   ]
 };
 
+// Render a lightweight server component that dynamic-imports the client-only UI
+const ProjectPageClient = dynamic(
+  () => import('@/components/projects/ProjectPageClient'),
+  { ssr: false }
+);
+
 export default function ProjectPage() {
-  // const params = useParams();
-  // Fetch project data using params.id if needed
-  const router = useRouter();
-  return (
-    <div className="max-w-5xl mx-auto py-8 space-y-8">
-      {/* Header */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">{mockProject.name}</CardTitle>
-          <div className="flex items-center space-x-2 mt-2">
-            <Badge>{mockProject.status.replace('-', ' ')}</Badge>
-            <span className="text-gray-600">{mockProject.location}</span>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-            <div>
-              <span className="text-gray-600">Contractor</span>
-              <div className="font-medium">{mockProject.contractor}</div>
-            </div>
-            <div>
-              <span className="text-gray-600">Budget</span>
-              <div className="font-medium">{mockProject.budget}</div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Progress</span>
-              <span className="font-medium">{mockProject.progress}%</span>
-            </div>
-            <Progress value={mockProject.progress} className="h-2" />
-          </div>
-          <div className="text-sm text-gray-600 mt-2">
-            Deadline: {new Date(mockProject.deadline).toLocaleDateString()}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Status Timeline */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Project Timeline</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {mockProject.stages.map((stage) => (
-              <li key={stage.name} className="flex justify-between">
-                <span>{stage.name}</span>
-                <span className="text-gray-500">{new Date(stage.date).toLocaleDateString()}</span>
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
-
-      {/* Camera Footage Grid */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Camera Footage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {mockProject.cameras.map((cam) => (
-              <Button key={cam.id} variant="outline" className="flex flex-col items-center p-4">
-                <img src={cam.thumbnail} alt={cam.name} className="w-24 h-16 object-cover rounded mb-2" />
-                <span className="font-medium">{cam.name}</span>
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Camera Footage</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {mockProject.cameras.map((cam) => (
-              <Button
-                key={cam.id}
-                variant="outline"
-                className="flex flex-col items-center p-4"
-                onClick={() => router.push(`/camera/${cam.id}`)}
-              >
-                <img src={cam.thumbnail} alt={cam.name} className="w-24 h-16 object-cover rounded mb-2" />
-                <span className="font-medium">{cam.name}</span>
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
+  return <ProjectPageClient />;
 }

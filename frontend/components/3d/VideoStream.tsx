@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 // import axios from 'axios';
 
 const VideoStream = () => {
-  const videoRef = useRef(null);
+  const videoRef = useRef<HTMLImageElement | null>(null);
   const [isStreaming, setIsStreaming] = useState(true);
   const streamUrl = 'http://localhost:8000/video/video_feed';
 

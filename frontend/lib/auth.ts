@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  account_type: 'contractor' | 'government';
+  account_type: 'contractor' | 'inspector';
   // age: number | 0;
   avatar?: string;
   phone?: string;
@@ -40,6 +40,7 @@ export const authenticateUser = async (email: string, password: string): Promise
 
   // Map backend user fields to frontend User interface
   if (data.user) {
+    console.log(data);
     return {
       id: data.user._id || data.user.id,
       email: data.user.email,

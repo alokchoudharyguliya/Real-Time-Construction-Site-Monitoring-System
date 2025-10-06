@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bell, Moon, Sun, Globe, User, Settings, LogOut, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,8 +27,42 @@ export function Header({ onMenuClick }: HeaderProps) {
   const { user, logout } = useAuth();
   const [showNotifications, setShowNotifications] = useState(false);
     const router = useRouter();
+    const headerRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+      let tl: any = null;
+      let mounted = true;
+
+      async function runAnimation() {
+        // lazy-load GSAP to avoid SSR issues
+        const { loadGsap, prefersReducedMotion } = await import('@/lib/gsap');
+        const gsapModule = await loadGsap();
+
+        if (!mounted || !gsapModule) return;
+
+        if (prefersReducedMotion()) return;
+
+        const gsap = gsapModule.gsap || gsapModule.default || gsapModule;
+        const el = headerRef.current;
+        if (!el) return;
+
+        // animate header container and child items
+        tl = gsap.timeline();
+        tl.from(el, { y: -20, opacity: 0, duration: 0.6, ease: 'power3.out' });
+        // Use a safe selector that avoids Tailwind responsive variants (colons)
+        const items = el.querySelectorAll('button, .w-8, h1, p, .flex.items-center > div');
+        tl.from(items, { y: -6, opacity: 0, stagger: 0.06, duration: 0.45, ease: 'power2.out' }, '-=0.35');
+      }
+
+      runAnimation();
+
+      return () => {
+        mounted = false;
+        if (tl && tl.kill) tl.kill();
+      };
+    }, []);
   return (
-    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 relative">
+  <header ref={headerRef} className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 relative">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Left side */}
