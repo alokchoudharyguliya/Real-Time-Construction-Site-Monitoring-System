@@ -151,9 +151,34 @@ export default function Reports() {
     }
   };
 
-  const displayedReports = filterType === 'all'
-    ? reports
-    : reports.filter(r => (r.type || '').toString().toLowerCase() === filterType.toLowerCase());
+  const displayedReports = reports.filter(r => {
+    // type filter
+    const typeOk = filterType === 'all' || (r.type || '').toString().toLowerCase() === filterType.toLowerCase();
+
+    // date filter
+    if (dateRange === 'all') {
+      return typeOk;
+    }
+
+    const reportDate = r.date ? new Date(r.date) : null;
+    if (!reportDate) return typeOk; // if no date, don't exclude based on date
+
+    const now = new Date();
+    let cutoff = new Date();
+    if (dateRange === '7d') {
+      cutoff.setDate(now.getDate() - 7);
+    } else if (dateRange === '30d') {
+      cutoff.setDate(now.getDate() - 30);
+    } else if (dateRange === '90d') {
+      cutoff.setDate(now.getDate() - 90);
+    } else {
+      // unknown range - fallback to include
+      return typeOk;
+    }
+
+    const dateOk = reportDate >= cutoff;
+    return typeOk && dateOk;
+  });
 
   return (
     <MainLayout>
