@@ -54,7 +54,7 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
         formData.append('avatar', image);
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/auth/profile/update/', {
+      const response = await fetch('http://127.0.0.1:8000/api/users/profile/', {
         method: 'POST',
         headers: {
           ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -73,7 +73,6 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
       login({
         ...user,
         name: data.user.name,
-        age: data.user.age,
         organization: data.user.organization,
         phone: data.user.phone,
         avatar: data.user.avatar,

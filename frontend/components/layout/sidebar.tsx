@@ -33,37 +33,37 @@
 //       name: t('dashboard'),
 //       href: '/dashboard',
 //       icon: LayoutDashboard,
-//       roles: ['contractor', 'government']
+//       roles: ['contractor', 'inspector']
 //     },
 //     {
 //       name: t('reports'),
 //       href: '/reports',
 //       icon: FileText,
-//       roles: ['contractor', 'government']
+//       roles: ['contractor', 'inspector']
 //     },
 //     {
 //       name: t('3d_view'),
 //       href: '/3d-view',
 //       icon: Box,
-//       roles: ['contractor', 'government']
+//       roles: ['contractor', 'inspector']
 //     },
 //     {
 //       name: 'Site Map',
 //       href: '/map',
 //       icon: MapPin,
-//       roles: ['contractor', 'government']
+//       roles: ['contractor', 'inspector']
 //     },
 //     {
 //       name: 'Projects',
 //       href: '/projects',
 //       icon: Building2,
-//       roles: ['government']
+//       roles: ['inspector']
 //     },
 //     {
 //       name: 'Contractors',
 //       href: '/contractors',
 //       icon: Users,
-//       roles: ['government']
+//       roles: ['inspector']
 //     }
 //   ];
 
@@ -212,48 +212,50 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement | null>(null);
+  const tlRef = useRef<any>(null);
 
   const navigation = [
     {
       name: t('dashboard'),
       href: '/dashboard',
       icon: LayoutDashboard,
-      roles: ['contractor', 'government']
+      roles: ['contractor', 'inspector']
     },
     {
       name: t('reports'),
       href: '/reports',
       icon: FileText,
-      roles: ['contractor', 'government']
+      roles: ['contractor', 'inspector']
     },
     {
       name: t('3d_view'),
       href: '/3d-view',
       icon: Box,
-      roles: ['contractor', 'government']
+      roles: ['contractor', 'inspector']
     },
     {
       name: 'Site Map',
       href: '/map',
       icon: MapPin,
-      roles: ['contractor', 'government']
+      roles: ['contractor', 'inspector']
     },
     {
       name: 'Projects',
       href: '/projects',
       icon: Building2,
-      roles: ['government']
+      roles: ['inspector']
     },
     {
       name: 'Contractors',
       href: '/contractors',
       icon: Users,
-      roles: ['government']
+      roles: ['inspector']
     }
   ];
 
   const filteredNavigation = navigation.filter(item => 
-    item.roles.includes(user?.role || 'contractor')
+    item.roles.includes(user?.account_type || 'contractor')
   );
 
   // Close sidebar on mobile if clicked outside
@@ -272,15 +274,58 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, onClose]);
 
+  // Animate open/close using GSAP (lazy-load). Respects prefers-reduced-motion.
+  useEffect(() => {
+    let mounted = true;
+    async function animate() {
+      const { loadGsap, prefersReducedMotion } = await import('@/lib/gsap');
+      const gsapModule = await loadGsap();
+      if (!mounted || !gsapModule) return;
+      if (prefersReducedMotion()) return;
+
+      const gsap = gsapModule.gsap || gsapModule.default || gsapModule;
+
+      if (tlRef.current && tlRef.current.kill) tlRef.current.kill();
+
+      const sidebarEl = sidebarRef.current as HTMLElement | null;
+      const backdropEl = backdropRef.current as HTMLElement | null;
+      const items = sidebarEl?.querySelectorAll('a, button') || [];
+
+      const tl = gsap.timeline();
+
+      if (window.innerWidth < 1024) {
+        if (isOpen) {
+          gsap.set(sidebarEl, { x: '-100%' });
+          tl.to(backdropEl, { opacity: 1, duration: 0.25, ease: 'power2.out' }, 0);
+          tl.to(sidebarEl, { x: '0%', duration: 0.36, ease: 'power3.out' }, 0);
+          tl.from(items, { y: -6, opacity: 0, stagger: 0.05, duration: 0.28 }, 0.08);
+        } else {
+          tl.to(backdropEl, { opacity: 0, duration: 0.22, ease: 'power2.in' }, 0);
+          tl.to(sidebarEl, { x: '-100%', duration: 0.32, ease: 'power2.in' }, 0);
+        }
+      } else {
+        tl.to(sidebarEl, { width: isCollapsed ? 72 : 256, duration: 0.36, ease: 'power2.out' });
+      }
+
+      tlRef.current = tl;
+    }
+
+    animate();
+
+    return () => {
+      mounted = false;
+      if (tlRef.current && tlRef.current.kill) tlRef.current.kill();
+    };
+  }, [isOpen, isCollapsed]);
+
   return (
     <>
-      {/* Mobile backdrop */}
+      {/* Mobile backdrop (animated via GSAP) */}
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+        <div
+          ref={backdropRef}
           className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+          style={{ opacity: 0 }}
         />
       )}
       
@@ -380,7 +425,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white text-xs font-bold">
-                  {user?.role === 'contractor' ? 'C' : 'G'}
+                  {user?.account_type === 'contractor' ? 'C' : 'G'}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
@@ -388,7 +433,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {user?.name}
                 </p>
                 <p className="text-xs text-gray-400 capitalize">
-                  {user?.role}
+                  {user?.account_type}
                 </p>
               </div>
             </div>

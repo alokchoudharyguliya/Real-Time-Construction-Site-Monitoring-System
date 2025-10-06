@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Building2, Shield } from 'lucide-react';
@@ -17,17 +18,98 @@ export function SignupForm() {
   const [error, setError] = useState('');
   const { login } = useAuth();
   const router = useRouter();
+  const formRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    let focusTls: any[] = [];
+
+    async function setup() {
+      const { loadGsap, prefersReducedMotion } = await import('@/lib/gsap');
+      const gsapModule = await loadGsap();
+      if (!mounted || !gsapModule) return;
+      if (prefersReducedMotion && prefersReducedMotion()) return;
+
+      const gsap = (gsapModule as any).gsap || (gsapModule as any).default || gsapModule;
+
+      const container = formRef.current;
+      if (!container) return;
+
+      const inputs = Array.from(container.querySelectorAll('input')) as HTMLInputElement[];
+      inputs.forEach((input) => {
+        const label = container.querySelector(`label[for="${input.id}"]`);
+        if (!label) return;
+
+        const onFocus = () => {
+          try { focusTls.push(gsap.to(label, { y: -18, scale: 0.92, duration: 0.18, ease: 'power1.out' })); } catch (e) {}
+          try { focusTls.push(gsap.to(input, { boxShadow: '0 6px 20px rgba(59,130,246,0.12)', duration: 0.22, ease: 'power1.out' })); } catch (e) {}
+        };
+
+        const onBlur = () => {
+          if (!input.value) {
+            try { focusTls.push(gsap.to(label, { y: 0, scale: 1, duration: 0.18, ease: 'power1.out' })); } catch (e) {}
+          }
+          try { focusTls.push(gsap.to(input, { boxShadow: 'none', duration: 0.18, ease: 'power1.out' })); } catch (e) {}
+        };
+
+        input.addEventListener('focus', onFocus);
+        input.addEventListener('blur', onBlur);
+
+        if (input.value) {
+          try { gsap.set(label, { y: -18, scale: 0.92 }); } catch (e) {}
+        }
+      });
+
+      const submitBtns = Array.from(container.querySelectorAll('button[type="submit"]')) as HTMLButtonElement[];
+      submitBtns.forEach((btn) => {
+        const onPointerDown = () => {
+          try { focusTls.push(gsap.to(btn, { scale: 0.98, duration: 0.08, ease: 'power1.out' })); } catch (e) {}
+        };
+        const onPointerUp = () => {
+          try { focusTls.push(gsap.to(btn, { scale: 1, duration: 0.12, ease: 'power1.out' })); } catch (e) {}
+        };
+        btn.addEventListener('pointerdown', onPointerDown);
+        btn.addEventListener('pointerup', onPointerUp);
+        (btn as any).__gsapHandlers = { onPointerDown, onPointerUp };
+      });
+    }
+
+    setup();
+
+    return () => {
+      mounted = false;
+      try { focusTls.forEach((tl) => tl && tl.kill && tl.kill()); } catch (e) {}
+
+      const container = formRef.current;
+      if (container) {
+        const submitBtns = Array.from(container.querySelectorAll('button[type="submit"]')) as HTMLButtonElement[];
+        submitBtns.forEach((btn) => {
+          const h = (btn as any).__gsapHandlers;
+          if (h) {
+            btn.removeEventListener('pointerdown', h.onPointerDown);
+            btn.removeEventListener('pointerup', h.onPointerUp);
+            delete (btn as any).__gsapHandlers;
+          }
+        });
+        const inputs = Array.from(container.querySelectorAll('input')) as HTMLInputElement[];
+        inputs.forEach((input) => {
+          input.removeEventListener('focus', () => {});
+          input.removeEventListener('blur', () => {});
+        });
+      }
+    };
+  }, []);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
-    accountType: 'contractor' | 'government'
+    accountType: 'contractor' | 'inspector'
   ) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
 
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name') as string;
+    const username = formData.get('name') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     // const age = formData.get('age') as string;
@@ -38,7 +120,7 @@ export function SignupForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name,
+          username,
           email,
           password,
           // age: age ? Number(age) : undefined,
@@ -205,7 +287,7 @@ export function SignupForm() {
               </TabsContent>
 
               <TabsContent value="government">
-                <form onSubmit={(e) => handleSubmit(e, 'government')} className="space-y-4">
+                <form onSubmit={(e) => handleSubmit(e, 'inspector')} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="gov-name">Name</Label>
                     <Input

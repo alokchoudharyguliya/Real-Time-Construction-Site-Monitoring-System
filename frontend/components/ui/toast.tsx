@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import * as ToastPrimitives from '@radix-ui/react-toast';
+import { loadGsap, prefersReducedMotion } from '@/lib/gsap';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
@@ -45,9 +46,89 @@ const Toast = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> &
     VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => {
+  const elRef = React.useRef<HTMLElement | null>(null);
+  const tlRef = React.useRef<any>(null);
+
+  React.useEffect(() => {
+    // respect reduced motion
+    if (prefersReducedMotion()) {
+      if (elRef.current) {
+        elRef.current.style.opacity = '1';
+        elRef.current.style.transform = 'none';
+      }
+      return;
+    }
+
+    let mounted = true;
+    let observer: MutationObserver | null = null;
+
+    const runEnter = async (el: HTMLElement) => {
+      try {
+        const mod = await loadGsap();
+        if (!mounted || !mod) return;
+        const gsap = (mod as any).gsap ?? mod;
+        tlRef.current?.kill?.();
+        tlRef.current = gsap.timeline();
+        // slide up + fade in
+        gsap.set(el, { autoAlpha: 0, y: 12 });
+        tlRef.current.to(el, { autoAlpha: 1, y: 0, duration: 0.28, ease: 'power2.out' });
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    const runExit = async (el: HTMLElement) => {
+      try {
+        const mod = await loadGsap();
+        if (!mounted || !mod) return;
+        const gsap = (mod as any).gsap ?? mod;
+        tlRef.current?.kill?.();
+        tlRef.current = gsap.timeline();
+        // quick y-snap and fade
+        tlRef.current.to(el, { y: 12, autoAlpha: 0, duration: 0.2, ease: 'power2.out' });
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    if (elRef.current) {
+      // Observe data-state attribute for Radix open/closed changes
+      observer = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          if (m.type === 'attributes' && m.attributeName === 'data-state') {
+            const target = m.target as HTMLElement;
+            const state = target.getAttribute('data-state');
+            if (state === 'open') runEnter(target);
+            else if (state === 'closed') runExit(target);
+          }
+        }
+      });
+
+      observer.observe(elRef.current, { attributes: true });
+
+      // initial state
+      const initState = elRef.current.getAttribute('data-state');
+      if (initState === 'open') runEnter(elRef.current);
+    }
+
+    return () => {
+      mounted = false;
+      try {
+        observer?.disconnect();
+      } catch (e) {}
+      try {
+        tlRef.current?.kill?.();
+      } catch (e) {}
+    };
+  }, []);
+
   return (
     <ToastPrimitives.Root
-      ref={ref}
+      ref={(node) => {
+        if (typeof ref === 'function') ref(node as any);
+        else if (ref) (ref as React.MutableRefObject<any>).current = node;
+        elRef.current = node as HTMLElement | null;
+      }}
       className={cn(toastVariants({ variant }), className)}
       {...props}
     />

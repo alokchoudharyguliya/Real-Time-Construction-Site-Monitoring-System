@@ -25,33 +25,36 @@ export function ProfileView({ onEdit }: { onEdit?: () => void }) {
 
   if (!user) return null;
   const handleExportProfile = useCallback(async () => {
-    try {
-      const token = localStorage.getItem('jwt_token');
-      const response = await fetch('http://127.0.0.1:8000/api/auth/profile/idcard/', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
+  if (!user?.id) {
+    alert('No user available to export');
+    return;
+  }
 
-      if (!response.ok) {
-        alert('Failed to download ID card');
-        return;
-      }
+  try {
+    const token = localStorage.getItem('jwt_token');
+    const response = await fetch(`http://127.0.0.1:8000/api/users/${user.id}/idcard/`, {
+      method: 'GET',
+      headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+    });
 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'idcard.pdf';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      alert('Error downloading ID card');
+    if (!response.ok) {
+      alert('Failed to download ID card');
+      return;
     }
-  }, []);
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'idcard.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Error downloading ID card');
+  }
+}, [user]);
   const profileSections = [
     {
       title: 'Personal Information',

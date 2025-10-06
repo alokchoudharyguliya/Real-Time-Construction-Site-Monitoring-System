@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@types/google.maps": "^3.58.1"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0"
   }
 }

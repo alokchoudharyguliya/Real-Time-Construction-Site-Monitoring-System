@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { loadGsap, prefersReducedMotion } from '@/lib/gsap';
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
 } from 'embla-carousel-react';
@@ -19,6 +20,8 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: 'horizontal' | 'vertical';
   setApi?: (api: CarouselApi) => void;
+  /** autoplay interval in milliseconds; 0 or undefined to disable */
+  autoplay?: number;
 };
 
 type CarouselContextProps = {
@@ -52,6 +55,7 @@ const Carousel = React.forwardRef<
       opts,
       setApi,
       plugins,
+      autoplay,
       className,
       children,
       ...props
@@ -75,6 +79,7 @@ const Carousel = React.forwardRef<
 
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
+      // trigger optional GSAP crossfade on selection (handled in effect)
     }, []);
 
     const scrollPrev = React.useCallback(() => {
@@ -105,6 +110,136 @@ const Carousel = React.forwardRef<
 
       setApi(api);
     }, [api, setApi]);
+
+    // GSAP crossfade on select + autoplay
+    React.useEffect(() => {
+      if (!api) return;
+
+      let mounted = true;
+      let gsap: any = null;
+      let tl: any = null;
+      let autoplayId: any = null;
+      const prevIndexRef = { current: api.selectedScrollSnap() };
+
+      const runAnimation = async (index: number, prevIndex: number) => {
+        if (prefersReducedMotion()) return;
+        try {
+          const mod = await loadGsap();
+          if (!mounted || !mod) return;
+          gsap = (mod as any).gsap ?? mod;
+
+          const slides: HTMLElement[] = api.slideNodes?.() ?? [];
+          const prevSlide = slides[prevIndex];
+          const nextSlide = slides[index];
+
+          // find media elements inside slides
+          const prevMedia = prevSlide?.querySelectorAll('img, picture, video') ?? [];
+          const nextMedia = nextSlide?.querySelectorAll('img, picture, video') ?? [];
+
+          // kill previous timeline
+          tl?.kill?.();
+          tl = gsap.timeline();
+
+          // fade out previous media
+          if (prevMedia && prevMedia.length) {
+            tl.to(prevMedia, {
+              autoAlpha: 0,
+              x: -20,
+              duration: 0.45,
+              ease: 'power4.out',
+              stagger: 0.02,
+            });
+          }
+
+          // fade in next media
+          if (nextMedia && nextMedia.length) {
+            tl.fromTo(
+              nextMedia,
+              { autoAlpha: 0, x: 20 },
+              { autoAlpha: 1, x: 0, duration: 0.6, ease: 'power4.out', stagger: 0.02 },
+              '<'
+            );
+          }
+        } catch (e) {
+          // ignore
+        }
+      };
+
+      const handleSelect = () => {
+        const idx = api.selectedScrollSnap();
+        const prev = prevIndexRef.current ?? idx;
+        if (idx === prev) return;
+        prevIndexRef.current = idx;
+        runAnimation(idx, prev);
+      };
+
+      api.on('select', handleSelect);
+
+      // initial reveal: ensure current slide media visible
+      (async () => {
+        if (prefersReducedMotion()) return;
+        try {
+          const mod = await loadGsap();
+          if (!mounted || !mod) return;
+          gsap = (mod as any).gsap ?? mod;
+          const slides: HTMLElement[] = api.slideNodes?.() ?? [];
+          const idx = api.selectedScrollSnap();
+          const media = slides[idx]?.querySelectorAll('img, picture, video') ?? [];
+          gsap.set(media, { autoAlpha: 1, x: 0 });
+        } catch (e) {}
+      })();
+
+      // autoplay handling
+      const startAutoplay = () => {
+        if (!autoplay || autoplay <= 0 || prefersReducedMotion()) return;
+        stopAutoplay();
+        autoplayId = setInterval(() => {
+          api?.scrollNext();
+        }, autoplay);
+      };
+
+      const stopAutoplay = () => {
+        if (autoplayId) {
+          clearInterval(autoplayId);
+          autoplayId = null;
+        }
+      };
+
+      startAutoplay();
+
+      const pauseHandlers = () => ({
+        onMouseEnter: () => stopAutoplay(),
+        onMouseLeave: () => startAutoplay(),
+        onTouchStart: () => stopAutoplay(),
+        onTouchEnd: () => startAutoplay(),
+      });
+
+      // attach pause/resume to root container via props handlers
+      // we cannot mutate props, so return handlers for the caller; instead set listeners on document for hover within this carousel region
+      // find root element from embla root slides
+      const rootEl = (api as any).rootNode?.() ?? null;
+      if (rootEl && rootEl.addEventListener) {
+        rootEl.addEventListener('mouseenter', stopAutoplay);
+        rootEl.addEventListener('mouseleave', startAutoplay);
+        rootEl.addEventListener('touchstart', stopAutoplay, { passive: true });
+        rootEl.addEventListener('touchend', startAutoplay);
+      }
+
+      return () => {
+        mounted = false;
+        api.off('select', handleSelect);
+        stopAutoplay();
+        if (rootEl && rootEl.removeEventListener) {
+          rootEl.removeEventListener('mouseenter', stopAutoplay);
+          rootEl.removeEventListener('mouseleave', startAutoplay);
+          rootEl.removeEventListener('touchstart', stopAutoplay as any);
+          rootEl.removeEventListener('touchend', startAutoplay as any);
+        }
+        try {
+          tl?.kill?.();
+        } catch (e) {}
+      };
+    }, [api, autoplay]);
 
     React.useEffect(() => {
       if (!api) {

@@ -7,3 +7,4 @@ Store/*
 Dataset/*
 *.venv/*
 *.h5
+node_modules/*
