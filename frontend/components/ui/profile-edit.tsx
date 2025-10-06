@@ -11,7 +11,6 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
   const [form, setForm] = useState({
     name: user?.name || '',
     // age: user?.age || '',
-    organization: user?.organization || '',
     phone: user?.phone || '',
   });
   const [image, setImage] = useState<File | null>(null);
@@ -48,7 +47,7 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
       const formData = new FormData();
       formData.append('name', form.name);
       // formData.append('age', form.age.toString());
-      formData.append('organization', form.organization);
+  // organization removed
       formData.append('phone', form.phone);
       if (image) {
         formData.append('avatar', image);
@@ -73,7 +72,6 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
       login({
         ...user,
         name: data.user.name,
-        organization: data.user.organization,
         phone: data.user.phone,
         avatar: data.user.avatar,
       });
@@ -121,10 +119,7 @@ export function ProfileEdit({ onCancel, onSave }: { onCancel?: () => void; onSav
         <label className="block mb-1 font-medium">Age</label>
         <Input name="age" type="number" value={form.age} onChange={handleChange} />
       </div> */}
-      <div>
-        <label className="block mb-1 font-medium">Organization</label>
-        <Input name="organization" value={form.organization} onChange={handleChange} />
-      </div>
+      {/* Organization removed */}
       <div>
         <label className="block mb-1 font-medium">Phone</label>
         <Input name="phone" value={form.phone} onChange={handleChange} />

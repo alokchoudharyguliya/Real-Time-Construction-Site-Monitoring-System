@@ -67,7 +67,7 @@ export function ProfileView({ onEdit }: { onEdit?: () => void }) {
     {
       title: 'Professional Details',
       items: [
-        { label: 'Organization', value: user.organization || 'Not specified', icon: Building },
+        // Organization removed
         { label: 'License Number', value: user.licenseNumber || 'N/A', icon: FileText },
         { label: 'Account Type', value: user.account_type, icon: Shield },
       ]

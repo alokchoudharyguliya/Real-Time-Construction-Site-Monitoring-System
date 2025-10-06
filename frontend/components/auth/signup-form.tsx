@@ -109,11 +109,10 @@ export function SignupForm() {
     setError('');
 
     const formData = new FormData(e.currentTarget);
-    const username = formData.get('name') as string;
+    const username = formData.get('username') as string;
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    // const age = formData.get('age') as string;
-    const organization = formData.get('organization') as string;
+  // const age = formData.get('age') as string;
 
     try {
       const response = await fetch('http://127.0.0.1:8000/api/auth/signup/', {
@@ -123,8 +122,6 @@ export function SignupForm() {
           username,
           email,
           password,
-          // age: age ? Number(age) : undefined,
-          organization,
           account_type: accountType,
         }),
       });
@@ -149,11 +146,11 @@ export function SignupForm() {
           id: data.user._id || data.user.id,
           email: data.user.email,
           name: data.user.name,
+          // username: data.user.username,
           // age: data.user.age,
           account_type: data.user.account_type || accountType,
           avatar: data.user.imageUrl || '',
           phone: data.user.phone_number || '',
-          organization: data.user.organization || '',
           licenseNumber: data.user.licenseNumber || '',
           permissions: data.user.permissions || [],
         });
@@ -210,10 +207,10 @@ export function SignupForm() {
               <TabsContent value="contractor">
                 <form onSubmit={(e) => handleSubmit(e, 'contractor')} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="contractor-name">Name</Label>
+                    <Label htmlFor="contractor-name">Username</Label>
                     <Input
                       id="contractor-name"
-                      name="name"
+                      name="username"
                       type="text"
                       placeholder="Your Name"
                       required
@@ -249,24 +246,6 @@ export function SignupForm() {
                       </button>
                     </div>
                   </div>
-                  {/* <div className="space-y-2">
-                    <Label htmlFor="contractor-age">Age</Label>
-                    <Input
-                      id="contractor-age"
-                      name="age"
-                      type="number"
-                      placeholder="Age"
-                    />
-                  </div> */}
-                  <div className="space-y-2">
-                    <Label htmlFor="contractor-organization">Organization</Label>
-                    <Input
-                      id="contractor-organization"
-                      name="organization"
-                      type="text"
-                      placeholder="Organization"
-                    />
-                  </div>
                   {error && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
@@ -292,7 +271,7 @@ export function SignupForm() {
                     <Label htmlFor="gov-name">Name</Label>
                     <Input
                       id="gov-name"
-                      name="name"
+                      name="username"
                       type="text"
                       placeholder="Your Name"
                       required
@@ -327,24 +306,6 @@ export function SignupForm() {
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
-                  </div>
-                  {/* <div className="space-y-2">
-                    <Label htmlFor="gov-age">Age</Label>
-                    <Input
-                      id="gov-age"
-                      name="age"
-                      type="number"
-                      placeholder="Age"
-                    />
-                  </div> */}
-                  <div className="space-y-2">
-                    <Label htmlFor="gov-organization">Organization</Label>
-                    <Input
-                      id="gov-organization"
-                      name="organization"
-                      type="text"
-                      placeholder="Organization"
-                    />
                   </div>
                   {error && (
                     <motion.div

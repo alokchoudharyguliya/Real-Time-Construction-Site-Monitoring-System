@@ -159,7 +159,6 @@ export function LoginForm() {
           account_type: data.user.account_type || data.user.role,
           avatar: data.user.imageUrl || data.user.avatar,
           phone: data.user.phone_number || data.user.phone,
-          organization: data.user.organization,
           // age: data.age,
           licenseNumber: data.user.licenseNumber,
           permissions: data.user.permissions || [],
