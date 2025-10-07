@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Contractor = {
   id: string | number;
@@ -32,6 +33,7 @@ export default function Contractors() {
   const [items, setItems] = useState<Contractor[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     let mounted = true;
@@ -42,7 +44,8 @@ export default function Contractors() {
         if (!res.ok) throw new Error(`Failed to fetch contractors: ${res.status}`);
         const json = await res.json();
         // API returns { inspectors: [...] }
-        const list = Array.isArray(json.inspectors) ? json.inspectors : [];
+        const list = Array.isArray(json.contractors) ? json.contractors : [];
+        // console.log(mapped);
         const mapped: Contractor[] = list.map((u: any) => ({
           id: u.id,
           name: u.name || u.username || u.email || `Contractor ${u.id}`,
@@ -56,7 +59,9 @@ export default function Contractors() {
           location: u.location ?? undefined,
           avatar: u.avatar_url ?? defaultAvatar,
         }));
+        console.log(mapped);
         if (mounted) setItems(mapped);
+
       } catch (err: any) {
         console.error(err);
         if (mounted) setError(err.message ?? 'Unknown error');
@@ -231,10 +236,10 @@ export default function Contractors() {
                   </div>
 
                   <div className="flex space-x-2 pt-2">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => router.push(`/contractors/${contractor.id}`)}>
                       View Profile
                     </Button>
-                    <Button size="sm" className="flex-1">
+                    <Button size="sm" className="flex-1" onClick={() => router.push(`/chat?partner=${contractor.id}`)}>
                       Contact
                     </Button>
                   </div>

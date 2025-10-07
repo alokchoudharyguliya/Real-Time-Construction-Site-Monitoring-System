@@ -3,6 +3,7 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { MapPin, Calendar, Users, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +39,7 @@ const getStatusColor = (status: string) => {
 
 export function ProjectGrid() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -112,7 +114,7 @@ export function ProjectGrid() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Recent Projects
         </h2>
-        <Button variant="outline">View All</Button>
+        <Button variant="outline" onClick={() => router.push('/projects')}>View All</Button>
       </div>
       {/* Statistical Pie Chart */}
       <div className="bg-white dark:bg-gray-900 rounded-lg p-4 mb-4 shadow">
