@@ -3,11 +3,14 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { MapPin, Calendar, Users, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
+const ProjectPageClient = dynamic(() => import('@/components/projects/ProjectPageClient'), { ssr: false });
 
 interface Project {
   id: string;
@@ -38,7 +41,9 @@ const getStatusColor = (status: string) => {
 
 export function ProjectGrid() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [openProject, setOpenProject] = useState<Project | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -112,7 +117,7 @@ export function ProjectGrid() {
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
           Recent Projects
         </h2>
-        <Button variant="outline">View All</Button>
+        <Button variant="outline" onClick={() => router.push('/projects')}>View All</Button>
       </div>
       {/* Statistical Pie Chart */}
       <div className="bg-white dark:bg-gray-900 rounded-lg p-4 mb-4 shadow">
@@ -201,7 +206,7 @@ export function ProjectGrid() {
                 </div>
 
                 <div className="pt-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={() => setOpenProject(project)}>
                     View Details
                   </Button>
                 </div>
@@ -210,6 +215,9 @@ export function ProjectGrid() {
           </div>
         ))}
       </div>
+      {openProject && (
+        <ProjectPageClient project={openProject} onClose={() => setOpenProject(null)} videoFeedBase="http://localhost:8000/video/video_feed" />
+      )}
     </div>
   );
 }

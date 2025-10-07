@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Users, Plus, Search, Filter, Building2, Award, MapPin } from 'lucide-react';
+import { Users, Plus, Search, Filter, Building2, Award, MapPin, Star } from 'lucide-react';
 import { MainLayout } from '@/components/layout/main-layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Contractor = {
   id: string | number;
@@ -32,6 +33,13 @@ export default function Contractors() {
   const [items, setItems] = useState<Contractor[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [minRating, setMinRating] = useState(0);
+  const [minActive, setMinActive] = useState<number | undefined>(undefined);
+  const [maxActive, setMaxActive] = useState<number | undefined>(undefined);
+  const [locationFilter, setLocationFilter] = useState<string>('');
 
   useEffect(() => {
     let mounted = true;
@@ -42,7 +50,8 @@ export default function Contractors() {
         if (!res.ok) throw new Error(`Failed to fetch contractors: ${res.status}`);
         const json = await res.json();
         // API returns { inspectors: [...] }
-        const list = Array.isArray(json.inspectors) ? json.inspectors : [];
+        const list = Array.isArray(json.contractors) ? json.contractors : [];
+        // console.log(mapped);
         const mapped: Contractor[] = list.map((u: any) => ({
           id: u.id,
           name: u.name || u.username || u.email || `Contractor ${u.id}`,
@@ -51,12 +60,20 @@ export default function Contractors() {
           phone: u.phone ?? undefined,
           license: u.licenseNo ?? u.license ?? undefined,
           rating: u.rating ?? undefined,
+          // keep original array or count
           activeProjects: u.activeProjects ?? 0,
           completedProjects: u.completedProjects ?? 0,
+          // numeric convenience field
+          // @ts-ignore - attach extra searchable fields
+          username: u.username ?? u.name ?? '',
+          // @ts-ignore
+          activeProjectsCount: Array.isArray(u.activeProjects) ? u.activeProjects.length : Number(u.activeProjects ?? 0),
           location: u.location ?? undefined,
           avatar: u.avatar_url ?? defaultAvatar,
         }));
+        console.log(mapped);
         if (mounted) setItems(mapped);
+
       } catch (err: any) {
         console.error(err);
         if (mounted) setError(err.message ?? 'Unknown error');
@@ -157,11 +174,13 @@ export default function Contractors() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
-                  placeholder="Search contractors..."
+                  placeholder="Search contractors by name, username or active projects..."
                   className="pl-10"
+                  value={query}
+                  onChange={(e) => setQuery((e.target as HTMLInputElement).value)}
                 />
               </div>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" onClick={() => setShowFilters((s) => !s)}>
                 <Filter className="h-4 w-4" />
                 Filter
               </Button>
@@ -169,9 +188,82 @@ export default function Contractors() {
           </CardContent>
         </Card>
 
+        {/* Filter Panel */}
+        {showFilters && (
+          <Card>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm font-medium">Minimum Rating</p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    {[1,2,3,4,5].map((s) => (
+                      <button key={s} className={`p-1 rounded ${minRating>=s ? 'bg-yellow-100 dark:bg-yellow-900' : ''}`} onClick={() => setMinRating(minRating===s?0:s)}>
+                        <Star className="h-4 w-4 text-yellow-500" />
+                      </button>
+                    ))}
+                    <span className="text-sm text-gray-600">{minRating > 0 ? `${minRating}+` : 'Any'}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium">Active Projects (min - max)</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <Input type="number" placeholder="Min" value={minActive ?? ''} onChange={(e) => setMinActive(e.target.value ? Number((e.target as HTMLInputElement).value) : undefined)} className="w-24" />
+                    <Input type="number" placeholder="Max" value={maxActive ?? ''} onChange={(e) => setMaxActive(e.target.value ? Number((e.target as HTMLInputElement).value) : undefined)} className="w-24" />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium">Location</p>
+                  <div className="mt-2">
+                    <select value={locationFilter} onChange={(e) => setLocationFilter(e.target.value)} className="w-full border rounded px-3 py-2">
+                      <option value="">Any</option>
+                      {/* sample locations derived from items */}
+                      {Array.from(new Set(items.map(i => i.location).filter(Boolean))).map((loc: any) => (
+                        <option key={loc} value={loc}>{loc}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Contractors Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((contractor, index) => (
+          {items
+            .filter((c) => {
+              // text / query matching
+              if (query) {
+                const q = query.toLowerCase();
+                const username = (c as any).username || '';
+                const activeCount = Number((c as any).activeProjectsCount ?? c.activeProjects ?? 0);
+                if (String(username).toLowerCase().includes(q)) return true;
+                if (c.name?.toLowerCase().includes(q)) return true;
+                // numeric match
+                if (!Number.isNaN(Number(q)) && activeCount === Number(q)) return true;
+                // substring match against activeProjectsCount
+                if (String(activeCount).includes(q)) return true;
+                // fallthrough — continue to other filters
+              }
+
+              // rating filter
+              if (minRating && Number(c.rating ?? 0) < minRating) return false;
+
+              // active projects count filter
+              const activeCount = Number((c as any).activeProjectsCount ?? c.activeProjects ?? 0);
+              if (minActive !== undefined && activeCount < minActive) return false;
+              if (maxActive !== undefined && activeCount > maxActive) return false;
+
+              // location filter
+              if (locationFilter && String(c.location) !== locationFilter) return false;
+
+              // if query existed and none of the text filters matched, filter out
+              if (query) return false;
+              return true;
+            })
+            .map((contractor, index) => (
             <motion.div
               key={contractor.id}
               initial={{ opacity: 0, y: 20 }}
@@ -203,9 +295,11 @@ export default function Contractors() {
                     <div>
                       <p className="text-gray-600 dark:text-gray-400">Rating</p>
                       <div className="flex items-center space-x-1">
-                        <span className="font-medium text-yellow-600">
-                          ★ {contractor.rating}
-                        </span>
+                        {Array.from({ length: 5 }).map((_, i) => {
+                          const r = Math.round(Number(contractor.rating ?? 0));
+                          return <Star key={i} className={`h-4 w-4 ${i < r ? 'text-yellow-500' : 'text-gray-300 dark:text-gray-600'}`} />;
+                        })}
+                        <span className="text-sm text-gray-500">{contractor.rating ?? '—'}</span>
                       </div>
                     </div>
                     <div>
@@ -231,10 +325,10 @@ export default function Contractors() {
                   </div>
 
                   <div className="flex space-x-2 pt-2">
-                    <Button variant="outline" size="sm" className="flex-1">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => router.push(`/contractors/${contractor.id}`)}>
                       View Profile
                     </Button>
-                    <Button size="sm" className="flex-1">
+                    <Button size="sm" className="flex-1" onClick={() => router.push(`/chat?partner=${contractor.id}`)}>
                       Contact
                     </Button>
                   </div>

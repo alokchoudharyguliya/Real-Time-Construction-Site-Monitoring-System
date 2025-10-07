@@ -29,29 +29,29 @@ const VideoStream = () => {
   };
 
   return (
-    // <div>
-    // {/* <h1>Webcam Stream</h1>
-    // <div>
-    //   <button onClick={startStream} disabled={isStreaming}>
-    //     Start Stream
-    //   </button>
-    //   <button onClick={stopStream} disabled={!isStreaming}>
-    //     Stop Stream
-    //   </button>
-    // </div> */}
-    <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} className='h-full'>
-      {isStreaming ? (
-        <img
-          ref={videoRef}
-          src={streamUrl}
-          alt="Video Stream"
-          style={{ alignSelf: 'center', height: '100%' }}
-        />
-      ) : (
-        <p>Stream not started</p>
-      )}
+    <div>
+      <h1>Webcam Stream</h1>
+      <div>
+        <button onClick={startStream} disabled={isStreaming}>
+          Start Stream
+        </button>
+        <button onClick={stopStream} disabled={!isStreaming}>
+          Stop Stream
+        </button>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }} className='h-full'>
+        {isStreaming ? (
+          <img
+            ref={videoRef}
+            src={streamUrl}
+            alt="Video Stream"
+            style={{ alignSelf: 'center', height: '100%' }}
+          />
+        ) : (
+          <p>Stream not started</p>
+        )}
+      </div>
     </div>
-    // </div>
   );
 };
 
