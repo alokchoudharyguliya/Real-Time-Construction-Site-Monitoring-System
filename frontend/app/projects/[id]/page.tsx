@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-
+import ProjectPageClient from './ProjectPageClient';
 export function generateStaticParams() {
   // List all possible project IDs here
   return [
@@ -37,10 +37,10 @@ const mockProject = {
 };
 
 // Render a lightweight server component that dynamic-imports the client-only UI
-const ProjectPageClient = dynamic(
-  () => import('@/components/projects/ProjectPageClient'),
-  { ssr: false }
-);
+// const ProjectPageClient = dynamic(
+//   () => import('@/components/projects/ProjectPageClient'),
+//   { ssr: false }
+// );
 
 export default function ProjectPage() {
   return <ProjectPageClient />;

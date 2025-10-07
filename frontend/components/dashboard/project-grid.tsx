@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
+const ProjectPageClient = dynamic(() => import('@/components/projects/ProjectPageClient'), { ssr: false });
 
 interface Project {
   id: string;
@@ -41,6 +43,7 @@ export function ProjectGrid() {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [openProject, setOpenProject] = useState<Project | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -203,7 +206,7 @@ export function ProjectGrid() {
                 </div>
 
                 <div className="pt-2">
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="outline" onClick={() => setOpenProject(project)}>
                     View Details
                   </Button>
                 </div>
@@ -212,6 +215,9 @@ export function ProjectGrid() {
           </div>
         ))}
       </div>
+      {openProject && (
+        <ProjectPageClient project={openProject} onClose={() => setOpenProject(null)} videoFeedBase="http://localhost:8000/video/video_feed" />
+      )}
     </div>
   );
 }

@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import React, { useState, useRef } from 'react';
+import dynamic from 'next/dynamic';
+const ProjectPageClient = dynamic(() => import('@/components/projects/ProjectPageClient'), { ssr: false });
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useEffect } from 'react';
@@ -25,6 +27,7 @@ type Project = {
   reports?: string[];
   created_by?: string;
   recent_image?: string;
+  cameras?: { id: string; name: string; thumbnail?: string }[];
 };
 
 function NewProjectForm({ onBack, onCreate, contractors }: { onBack: () => void; onCreate: (project: Project) => void; contractors: string[] }) {
@@ -169,6 +172,7 @@ export default function ProjectsPage() {
   const [filterDeadlineRange, setFilterDeadlineRange] = useState<string>('all');
   const [contractors, setContractors] = useState<string[]>([]);
   const router = useRouter();
+  const [openProject, setOpenProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -204,6 +208,8 @@ export default function ProjectsPage() {
             created_by: d.created_by ?? d.created_by_name ?? d.owner ?? '',
             // recent image fallback
             recent_image: d.recent_image ?? d.recentImage ?? d.recent_image_url ?? d.image_url ?? (d.file_url ?? undefined),
+            // map cameras if backend provides them; fall back to empty array
+            cameras: Array.isArray(d.cameras) ? d.cameras.map((c: any) => ({ id: String(c.id ?? c.camera_id ?? c.name), name: c.name ?? c.label ?? String(c.id), thumbnail: c.thumbnail ?? c.thumb ?? undefined })) : [],
             created_at: d.created_at ?? d.createdAt,
             updated_at: d.updated_at ?? d.updatedAt,
           }))
@@ -477,10 +483,10 @@ export default function ProjectsPage() {
                     <div className="flex items-center justify-between pt-2">
                       <span className="text-sm text-gray-600 dark:text-gray-400">Deadline: {new Date(project.deadline).toLocaleDateString()}</span>
                       <div className="flex space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => router.push(`/projects/${project.id}`)}>
+                        <Button variant="outline" size="sm"  onClick={() => router.push(`/contractors/${project.id}`)}>
                           View Details
                         </Button>
-                        <Button size="sm">Monitor</Button>
+                        {/* <Button size="sm">Monitor</Button> */}
                       </div>
                     </div>
 
@@ -502,6 +508,13 @@ export default function ProjectsPage() {
             ))}
           </div>
         </motion.div>
+      )}
+      {openProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 z-40 flex justify-end">
+          <div className="w-full lg:w-2/3 xl:w-3/5 h-full bg-white dark:bg-gray-900 overflow-auto p-6">
+            <ProjectPageClient project={openProject} onClose={() => setOpenProject(null)} videoFeedBase="http://localhost:8000/video/video_feed" />
+          </div>
+        </div>
       )}
     </MainLayout>
   );

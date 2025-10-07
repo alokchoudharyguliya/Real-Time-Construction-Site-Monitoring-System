@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { MainLayout } from '@/components/layout/main-layout';
 // ...existing code...
 const VIDEO_FEED_BASE = 'http://localhost:8000/video/video_feed';
 
@@ -47,30 +48,16 @@ export default function ProjectPageClient({ project, onClose, videoFeedBase }: {
   const videoRef = useRef<HTMLImageElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [selectedCam, setSelectedCam] = useState<Camera | null>(null);
+  const [selectedCam, setSelectedCam] = useState<Camera | null>(mockCamera);
   const p = project ?? mockProject;
   const feedBase = videoFeedBase ?? VIDEO_FEED_BASE;
 
   useEffect(() => {
-    // Set up video element to display stream; include camera id when selected
+    // Set up video element to display stream
     if (videoRef.current) {
-      if (selectedCam) {
-        videoRef.current.src = `${feedBase}?camera=${encodeURIComponent(selectedCam.id)}`;
-      } else {
-        videoRef.current.src = feedBase;
-      }
+      videoRef.current.src = feedBase;
     }
   }, [feedBase, selectedCam]);
-
-  // Auto-select first camera when a project prop is provided (modal open)
-  useEffect(() => {
-    if (project && project.cameras && project.cameras.length > 0) {
-      setSelectedCam(project.cameras[0]);
-    } else {
-      setSelectedCam(null);
-    }
-    // only run when the project identity changes
-  }, [project]);
 
   // When rendered as a modal (onClose provided), listen for outside clicks and Escape key
   useEffect(() => {
@@ -101,7 +88,8 @@ export default function ProjectPageClient({ project, onClose, videoFeedBase }: {
   };
 
   return (
-    <div>
+    <MainLayout>
+    <div className="max-w-4xl mx-auto space-y-6">
       {onClose ? (
         <div ref={backdropRef} onPointerDown={handleBackdropPointerDown} className="fixed inset-0 z-50 bg-white bg-opacity-100 flex items-start justify-center p-6 overflow-auto">
           <div ref={contentRef} className="max-w-5xl mx-auto py-8 space-y-8">
@@ -195,7 +183,7 @@ export default function ProjectPageClient({ project, onClose, videoFeedBase }: {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {(p.cameras && p.cameras.length > 0) ? p.cameras.map((cam) => (
-                <button key={cam.id} className={`flex flex-col items-center p-4 border rounded ${selectedCam?.id === cam.id ? 'ring-2 ring-offset-1 ring-blue-400' : ''}`} onClick={() => setSelectedCam(cam)}>
+                <button key={cam.id} className="flex flex-col items-center p-4 border rounded" onClick={() => setSelectedCam(mockCamera)}>
                   {cam.thumbnail ? (
                     <img src={cam.thumbnail} alt={cam.name} className="w-24 h-16 object-cover rounded mb-2" />
                   ) : (
@@ -319,5 +307,6 @@ export default function ProjectPageClient({ project, onClose, videoFeedBase }: {
         </div>
       )}
     </div>
+    </MainLayout>
   );
 }
